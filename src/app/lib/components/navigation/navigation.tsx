@@ -12,6 +12,7 @@ import { auth } from "../../firebase/firebase";
 import ShortUniqueId from "short-unique-id";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { socket } from "../../../socket";
 
 export const Navigation = () => {
   const [, setChatTitle] = useState("");
@@ -32,6 +33,7 @@ export const Navigation = () => {
     const uuid = new ShortUniqueId({ length: 6 }).randomUUID();
     newConvo(uuid);
     router.push(`/chat/${uuid}`);
+    socket.emit("createRoom", uuid);
   };
 
   const SettingsButton = () => {

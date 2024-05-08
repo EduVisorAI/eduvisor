@@ -8,10 +8,12 @@ import { motion } from "framer-motion";
 import { Button } from "../button/button";
 import { MdiShowOutline } from "../../assets/show-outline";
 import { SolarRefreshCircleLinear } from "../../assets/refresh-circle";
+import { socket } from "../../../socket";
 
 export const SpeechBubble: React.FC<{
   speaker: string;
   text: string;
+  chatId?: string;
   cid?: string;
   loading?: boolean;
   animate: boolean;
@@ -57,7 +59,22 @@ export const SpeechBubble: React.FC<{
           ></iframe>
         )}
         <div className="flex gap-3 mt-2">
-          <Button level="secondary" fullWidth={false}>
+          <Button
+            level="secondary"
+            fullWidth={false}
+            clickHandler={() => {
+							// socket.to(props.chatId).emit("some");
+							// socket.
+              socket.emit(
+                "content-change",
+                {
+                  text: props.text,
+                  image: `https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`
+                },
+                props.chatId
+              );
+            }}
+          >
             <div className="flex gap-1 items-center">
               <MdiShowOutline />
               <p className="text-sm font-bold">Mostrar en display</p>

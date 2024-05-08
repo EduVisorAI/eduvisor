@@ -14,12 +14,11 @@ const firebaseConfig = {
   storageBucket: "eduvisorai.appspot.com",
   messagingSenderId: "11082023871",
   appId: "1:11082023871:web:a3ecc004ecaa1a138e170a",
-  measurementId: "G-7VLM8RZ504",
+  measurementId: "G-7VLM8RZ504"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const analytics = getAnalytics(app);
 
-export { app, auth, analytics };
+export { app, auth };

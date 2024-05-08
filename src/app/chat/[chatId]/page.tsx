@@ -12,7 +12,7 @@ import { Card } from "../../lib/components/card/card";
 import { useAuth } from "../../lib/contexts/authContext/index";
 import { Button } from "../../lib/components/button/button";
 import { Container } from "@/app/lib/components/container/container";
-import Link from "next/link";
+import PrivateRoute from "@/app/lib/components/private_route";
 
 const promptTemplates = [
   "Explicame sobre el etanol",
@@ -66,74 +66,78 @@ export default function Page() {
   };
 
   return (
-    <Container>
-      {conversation && conversation.speeches.length === 0 && (
-        <div className={styles["secondary-section"]}>
-          <h2 className={styles["secondary-heading"]}>Prueba con esto</h2>
-          <motion.div
-            className={styles["prompts-container"]}
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-          >
-            {promptTemplates.map((prompt, id) => (
-              <button key={id} onClick={() => onTemplateClicked(prompt)}>
-                <Card direction="row">
-                  <p className={styles["prompt-text"]}>{prompt}</p>
-                </Card>
-              </button>
-            ))}
-          </motion.div>
-        </div>
-      )}
-      {conversation && conversation.speeches.length > 0 && (
-        <div className={styles["chat-container"]}>
-          {chatId && (
-            <div className="hidden md:flex justify-end">
-              <Button
-                level="primary"
-                fullWidth={false}
-                clickHandler={() => {
-                  window.open(`/display/${chatId}`, "_blank");
-                }}
-              >
-                Room {chatId}
-              </Button>
-            </div>
-          )}
-          <div>
-            {conversation.speeches.map((speech, id) => {
-              console.log("🚀 ~ {conversation.speeches.map ~ speech:", speech);
-              const speaker = speech.speaker === "HUMAN" ? "user" : "ai";
-              let animate = false;
-              if (id === conversation.speeches.length - 1) {
-                animate = true;
-              }
-              return (
-                <SpeechBubble
-                  key={id}
-                  speaker={speaker}
-                  text={speech.content.response}
-                  cid={speech.content.cid}
-                  animate={animate}
-                />
-              );
-            })}
-            {loading && (
-              <SpeechBubble
-                speaker="ai"
-                text=""
-                loading={true}
-                animate={true}
-                delay={0.5}
-              />
-            )}
-            {error && <div className={styles["error-container"]}>{error}</div>}
-            <div ref={chatEndRef} />
+    <PrivateRoute>
+      <Container>
+        {conversation && conversation.speeches.length === 0 && (
+          <div className={styles["secondary-section"]}>
+            <h2 className={styles["secondary-heading"]}>Prueba con esto</h2>
+            <motion.div
+              className={styles["prompts-container"]}
+              animate={{ opacity: 1 }}
+              initial={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+            >
+              {promptTemplates.map((prompt, id) => (
+                <button key={id} onClick={() => onTemplateClicked(prompt)}>
+                  <Card direction="row">
+                    <p className={styles["prompt-text"]}>{prompt}</p>
+                  </Card>
+                </button>
+              ))}
+            </motion.div>
           </div>
-        </div>
-      )}
-      <ChatInput inputSubmitHandler={onInputSubmit} submitting={loading} />
-    </Container>
+        )}
+        {conversation && conversation.speeches.length > 0 && (
+          <div className={styles["chat-container"]}>
+            {chatId && (
+              <div className="hidden md:flex justify-end">
+                <Button
+                  level="primary"
+                  fullWidth={false}
+                  clickHandler={() => {
+                    window.open(`/display/${chatId}`, "_blank");
+                  }}
+                >
+                  Room {chatId}
+                </Button>
+              </div>
+            )}
+            <div>
+              {conversation.speeches.map((speech, id) => {
+                const speaker = speech.speaker === "HUMAN" ? "user" : "ai";
+                let animate = false;
+                if (id === conversation.speeches.length - 1) {
+                  animate = true;
+                }
+                return (
+                  <SpeechBubble
+										key={id}
+										chatId={chatId}
+                    speaker={speaker}
+                    text={speech.content.response}
+                    cid={speech.content.cid}
+                    animate={animate}
+                  />
+                );
+              })}
+              {loading && (
+                <SpeechBubble
+                  speaker="ai"
+                  text=""
+                  loading={true}
+                  animate={true}
+                  delay={0.5}
+                />
+              )}
+              {error && (
+                <div className={styles["error-container"]}>{error}</div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+          </div>
+        )}
+        <ChatInput inputSubmitHandler={onInputSubmit} submitting={loading} />
+      </Container>
+    </PrivateRoute>
   );
 }
