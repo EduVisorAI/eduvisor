@@ -1,0 +1,7 @@
+.background {
+  @apply bg-[#F3F7FB] z-0 w-full h-full min-h-screen flex flex-col md:flex-row overflow-hidden;
+}
+
+.container {
+  @apply w-full mx-auto flex flex-col grow overflow-auto;
+}

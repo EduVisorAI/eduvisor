@@ -1,0 +1,15 @@
+.ai-container {
+  @apply w-full mx-auto max-w-[56rem];
+}
+
+.user-container {
+  @apply w-full mx-auto max-w-[56rem];
+}
+
+.ai {
+  @apply p-2;
+}
+
+.user {
+  @apply inline-block p-2;
+}

@@ -1,0 +1,23 @@
+.secondary-section {
+  @apply m-auto;
+}
+
+.secondary-heading {
+  @apply text-2xl tracking-wide md:text-3xl text-center font-semibold;
+}
+
+.prompts-container {
+  @apply flex flex-col items-center md:items-stretch md:flex-row;
+}
+
+.prompt-text {
+  @apply text-sm;
+}
+
+.chat-container {
+  @apply w-full mx-auto flex-1 overflow-y-auto py-5 px-5;
+}
+
+.error-container {
+  @apply bg-red-200 text-red-400 p-4 rounded-md max-w-[56rem] mx-auto my-4;
+}

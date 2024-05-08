@@ -1,0 +1,27 @@
+.btn {
+  @apply transition-all ease-in-out duration-300 font-medium py-[7px] px-3 rounded inline-flex items-center justify-center my-2;
+}
+
+.primary {
+  @apply bg-[#5661F6] hover:bg-[#4C53D7] text-neutral-50;
+}
+
+.secondary {
+  @apply border-[1px] border-[#5661F6] text-[#5661F6] hover:border-[#4C53D7] hover:text-[#4C53D7] bg-white/50;
+}
+
+.full-width {
+  @apply w-full;
+}
+
+.rounded {
+  @apply rounded-full px-3 text-[14px];
+}
+
+.primary-disabled {
+  @apply bg-[#5661F6] text-neutral-50 opacity-80 cursor-not-allowed transition-none hover:scale-100;
+}
+
+.secondary-disabled {
+  @apply border-2 border-[#5661F6] text-[#5661F6] opacity-80 cursor-not-allowed transition-none hover:scale-100;
+}

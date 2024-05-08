@@ -1,0 +1,11 @@
+.input {
+  @apply rounded-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] m-0 w-full resize-none border-0 bg-transparent focus:outline-none focus:shadow-none py-[10px] pr-10 md:py-3.5 md:pr-12 pl-4 md:pl-6;
+}
+
+.disabled-input {
+  @apply rounded-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] m-0 w-full resize-none bg-transparent py-[10px] pr-10 md:py-3.5 md:pr-12 pl-4 md:pl-6;
+}
+
+.container {
+  @apply relative w-full max-w-[56rem] mx-auto z-10 flex items-center justify-center bottom-0 right-[2px] py-4 px-2;
+}
