@@ -14,11 +14,11 @@ app.prepare().then(() => {
   const io = new Server(httpServer);
 
   io.on("connection", (socket) => {
-    socket.on("content-change", (content, roomId) => {
+    socket.on("send-to-display", (content, roomId) => {
       io.to(roomId).emit("content-change", content);
     });
 
-    socket.on("createRoom", (roomId) => {
+    socket.on("join-room", (roomId) => {
       socket.join(roomId);
     });
   });

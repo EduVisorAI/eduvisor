@@ -63,10 +63,8 @@ export const SpeechBubble: React.FC<{
             level="secondary"
             fullWidth={false}
             clickHandler={() => {
-							// socket.to(props.chatId).emit("some");
-							// socket.
               socket.emit(
-                "content-change",
+                "send-to-display",
                 {
                   text: props.text,
                   image: `https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`

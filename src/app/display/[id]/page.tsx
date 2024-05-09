@@ -12,6 +12,8 @@ export default function Page() {
   });
 
   useEffect(() => {
+    socket.emit("join-room", id);
+
     socket.on("content-change", (data) => {
       setContent(data);
     });
@@ -19,7 +21,7 @@ export default function Page() {
     return () => {
       socket.off("content-change");
     };
-  }, []);
+  }, [id]);
 
   return (
     <div className="h-full max-w-[56rem] flex flex-col justify-center items-center mx-auto text-center">

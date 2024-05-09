@@ -33,7 +33,6 @@ export const Navigation = () => {
     const uuid = new ShortUniqueId({ length: 6 }).randomUUID();
     newConvo(uuid);
     router.push(`/chat/${uuid}`);
-    socket.emit("createRoom", uuid);
   };
 
   const SettingsButton = () => {
