@@ -24,7 +24,7 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm run build --if-present
+          npm run build
           npm run test --if-present
 
       - name: Upload artifact for deployment job
@@ -54,6 +54,9 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2648A3B899EC4638B488648BD5E4C788 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EA0F0DFA1AD340419C988FF5B4F41B82 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_896A28391A9843DCA2A4947F877EB05D }}
+
+      - name: Set NODE_ENV to production
+        run: echo "NODE_ENV=production" >> $GITHUB_ENV
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp

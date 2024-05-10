@@ -29,6 +29,12 @@ app.prepare().then(() => {
       process.exit(1);
     })
     .listen(port, () => {
-      console.log(`> Ready on https://${hostname}:${port}`);
+      console.log(`> Ready on http://${hostname}:${port}`);
     });
+
+    if (process.env.NODE_ENV === 'production') {
+      console.log('La aplicación está corriendo en un entorno de producción.');
+    } else {
+      console.log('La aplicación NO está corriendo en un entorno de producción, está corriendo en ' + process.env.NODE_ENV);
+    }
 });
