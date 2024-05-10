@@ -12,7 +12,6 @@ import { auth } from "../../firebase/firebase";
 import ShortUniqueId from "short-unique-id";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { socket } from "../../../socket";
 
 export const Navigation = () => {
   const [, setChatTitle] = useState("");
@@ -30,7 +29,7 @@ export const Navigation = () => {
   }, [chatId, conversations]);
 
   const newChatHandler = () => {
-    const uuid = new ShortUniqueId({ length: 6 }).randomUUID();
+    const uuid = new ShortUniqueId({ length: 6 }).randomUUID().toUpperCase();
     newConvo(uuid);
     router.push(`/chat/${uuid}`);
   };
