@@ -3,7 +3,7 @@ import next from "next";
 import { Server } from "socket.io";
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
+const hostname = "eduvisor.azurewebsites.net";
 const port = 3000;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
@@ -29,6 +29,6 @@ app.prepare().then(() => {
       process.exit(1);
     })
     .listen(port, () => {
-      console.log(`> Ready on http://${hostname}:${port}`);
+      console.log(`> Ready on https://${hostname}:${port}`);
     });
 });
