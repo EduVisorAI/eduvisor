@@ -61,7 +61,7 @@ export const AIContextProvider: React.FC<React.PropsWithChildren> = (props) => {
         .speeches.push({
           speaker: "HUMAN",
           content: {
-            response: prompt
+            answer: prompt
           }
         });
       return newConvos;

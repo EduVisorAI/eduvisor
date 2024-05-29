@@ -24,8 +24,7 @@ export class AI extends Speaker {
   }
 
   async think(conversation: Conversation, userId: string) {
-    conversation;
-    const response = await this.request(this.prompt, userId);
+    const response = await this.request(this.prompt, userId, conversation.id());
 
     return response;
   }
@@ -44,16 +43,17 @@ export class AI extends Speaker {
     //   description: description.content.response
     // });
     conversation.summarize({
-      title: conversation.speeches[0].content.response,
-      description: conversation.speeches[0].content.response
+      title: conversation.speeches[0].content.answer,
+      description: conversation.speeches[0].content.answer
     });
   }
 
-  private async request(prompt: Prompt, userId?: string) {
+  private async request(prompt: Prompt, chatId: string, userId?: string) {
     try {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append("userId", userId ?? "");
+      myHeaders.append("chatId", chatId);
 
       const raw = JSON.stringify({
         message: prompt.content
@@ -71,7 +71,6 @@ export class AI extends Speaker {
       );
 
       const json = await res.json();
-      // const { response, cid } = json;
       return this.speak(json);
     } catch (error) {
       throw new Error("There was an error. Please try again.");

@@ -14,6 +14,7 @@ export const SpeechBubble: React.FC<{
   speaker: string;
   text: string;
   chatId?: string;
+  component?: string;
   cid?: string;
   loading?: boolean;
   animate: boolean;
@@ -67,7 +68,8 @@ export const SpeechBubble: React.FC<{
                 "send-to-display",
                 {
                   text: props.text,
-                  image: `https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`
+                  image: `https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`,
+                  component: props.component
                 },
                 props.chatId
               );

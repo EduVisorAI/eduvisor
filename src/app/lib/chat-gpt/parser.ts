@@ -20,8 +20,9 @@ export class Parser {
       speeches.push({
         speaker: speaker,
         content: {
-          response: convo.speeches[i].content.response,
-          cid: convo.speeches[i].content.cid
+          answer: convo.speeches[i].content.answer,
+          cid: convo.speeches[i].content.cid,
+          component: convo.speeches[i].content.component
         }
       });
     }

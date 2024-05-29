@@ -111,11 +111,12 @@ export default function Page() {
                 }
                 return (
                   <SpeechBubble
-										key={id}
-										chatId={chatId}
+                    key={id}
+                    chatId={chatId}
                     speaker={speaker}
-                    text={speech.content.response}
+                    text={speech.content.answer}
                     cid={speech.content.cid}
+                    component={speech.content.component}
                     animate={animate}
                   />
                 );

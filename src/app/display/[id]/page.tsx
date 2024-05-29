@@ -8,20 +8,16 @@ import "./display.module.css";
 export default function Page() {
   const { id } = useParams<{ id: string }>();
   const [content, setContent] = useState({
-    name: "ETANOL",
     text: "A la espera de contenido",
-    image: ""
+    image: "",
+    component: ""
   });
 
   useEffect(() => {
     socket.emit("join-room", id);
 
     socket.on("content-change", (data) => {
-      setContent({
-        name: content.name,
-        text: data.text,
-        image: data.image
-      });
+      setContent(data);
     });
 
     return () => {
@@ -35,8 +31,8 @@ export default function Page() {
         <p className="text-white text-xl font-bold pl-4 py-4">Room {id}</p>
       </div>
       <div className="h-full flex bg-black">
-        <div className="flex-1 flex flex-col justify-center items-start text-white pl-20 w-full">
-          <p className="text-4xl font-bold text-start">{content.name}</p>
+        <div className="flex-1 flex flex-col justify-center items-start text-white px-20 w-full">
+          <p className="text-4xl font-bold text-start">{content.component}</p>
           <div className="flex justify-center mt-2">
             <p className="text-xl max-w-[32ch] text-justify">{content.text}</p>
           </div>
