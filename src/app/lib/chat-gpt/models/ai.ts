@@ -24,7 +24,7 @@ export class AI extends Speaker {
   }
 
   async think(conversation: Conversation, userId: string) {
-    const response = await this.request(this.prompt, userId, conversation.id());
+    const response = await this.request(this.prompt, conversation.id(), userId);
 
     return response;
   }
@@ -48,12 +48,12 @@ export class AI extends Speaker {
     });
   }
 
-  private async request(prompt: Prompt, chatId: string, userId?: string) {
+  private async request(prompt: Prompt, chatId: string, userId: string) {
     try {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append("userId", userId ?? "");
-      myHeaders.append("chatId", chatId);
+      myHeaders.append("chatId", chatId ?? "");
 
       const raw = JSON.stringify({
         message: prompt.content

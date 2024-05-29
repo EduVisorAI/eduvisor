@@ -33,7 +33,7 @@ export default function Page() {
       <div className="h-full flex bg-black">
         <div className="flex-1 flex flex-col justify-center items-start text-white px-20 w-full">
           <p className="text-4xl font-bold text-start">{content.component}</p>
-          <div className="flex justify-center mt-2">
+          <div className="flex justify-cenZter mt-2">
             <p className="text-xl max-w-[32ch] text-justify">{content.text}</p>
           </div>
         </div>
