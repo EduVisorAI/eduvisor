@@ -2,8 +2,15 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ["pubchem.ncbi.nlm.nih.gov"]
-  }
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "pubchem.ncbi.nlm.nih.gov",
+        port: "",
+        pathname: "**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
