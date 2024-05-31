@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/display-name */
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { Fragment } from "react";
 import styles from "./speechBubble.module.css";
 import Loader from "../../../../../public/loading.gif";
 import { motion } from "framer-motion";
@@ -51,7 +51,16 @@ export const SpeechBubble: React.FC<{
       <img src={Loader.src} width={40} alt="Loading" />
     ) : (
       <>
-        <p className="font-bold text-[18px] mb-2">{props.text}</p>
+        <p className="font-medium text-[18px] mb-2">
+          {props.text &&
+            props.text.split("\n").map((line: string, i: any) => (
+              <Fragment key={i}>
+                {line}
+                <br />
+              </Fragment>
+            ))}
+        </p>
+
         {props.cid && (
           <iframe
             className="my-2"

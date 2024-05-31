@@ -66,7 +66,12 @@ export default function Page() {
           </p>
           <div className="flex justify-cenZter mt-2">
             <p className="text-[24px] max-w-[70ch] text-justify">
-              {content.text}
+              {content.text.split("\n").map((line, i) => (
+                <Fragment key={i}>
+                  {line}
+                  <br />
+                </Fragment>
+              ))}
             </p>
           </div>
         </div>
