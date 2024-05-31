@@ -23,7 +23,7 @@ export class Controller {
     const curConvo = convos.find((c) => c.id() === convoId) as Conversation;
     const human = new Human();
     const ai = this.readAI();
-    const speech = human.speak({ response: prompt });
+    const speech = human.speak({ answer: prompt });
     human.add(speech, curConvo);
     ai.prompt = new Prompt(prompt);
     const response = await ai.think(curConvo, userId);

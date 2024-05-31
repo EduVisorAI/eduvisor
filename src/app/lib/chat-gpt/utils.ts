@@ -3,7 +3,8 @@ import { Speaker } from "./models/speaker";
 export interface Speech {
   speaker: Speaker;
   content: {
-    response: string;
+    answer: string;
+    component?: string;
     cid?: string;
   };
 }

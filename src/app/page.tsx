@@ -15,7 +15,7 @@ export default function Page() {
   const aiContext = useContext(AIContext);
 
   const newChatHandler = () => {
-    const uuid = new ShortUniqueId({ length: 6 }).randomUUID();
+    const uuid = new ShortUniqueId({ length: 6 }).randomUUID().toUpperCase();
     aiContext.newConvo(uuid);
     router.push(`/chat/${uuid}`);
   };
