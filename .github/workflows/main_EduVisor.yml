@@ -11,41 +11,41 @@ on:
 
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4.1.6
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.3.0
 
-    - name: Log in to registry
-      uses: docker/login-action@v2
-      with:
-        registry: https://eduvisoracr.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_b9843ce492b6466e9d406b842d6cb7ef }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_43a7d0831ae34aabb3d18f2099070362 }}
+      - name: Log in to registry
+        uses: docker/login-action@v3.2.0
+        with:
+          registry: https://eduvisoracr.azurecr.io/
+          username: ${{ secrets.AzureAppService_ContainerUsername_b9843ce492b6466e9d406b842d6cb7ef }}
+          password: ${{ secrets.AzureAppService_ContainerPassword_43a7d0831ae34aabb3d18f2099070362 }}
 
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v3
-      with:
-        push: true
-        tags: eduvisoracr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_b9843ce492b6466e9d406b842d6cb7ef }}/eduvisor:${{ github.sha }}
-        file: ./Dockerfile
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v5.3.0
+        with:
+          push: true
+          tags: eduvisoracr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_b9843ce492b6466e9d406b842d6cb7ef }}/eduvisor:${{ github.sha }}
+          file: ./Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'production'
+      name: "production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'EduVisor'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_97504f10c8714930ba34dc76b7d8c2e2 }}
-        images: 'eduvisoracr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_b9843ce492b6466e9d406b842d6cb7ef }}/eduvisor:${{ github.sha }}'
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: "EduVisor"
+          slot-name: "production"
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_97504f10c8714930ba34dc76b7d8c2e2 }}
+          images: "eduvisoracr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_b9843ce492b6466e9d406b842d6cb7ef }}/eduvisor:${{ github.sha }}"
