@@ -15,7 +15,6 @@ export default function Page() {
     cid: ""
   });
   const [viewMode, setViewMode] = useState("2D");
-  const [image2D, setImage2D] = useState<any>(null);
 
   useEffect(() => {
     socket.emit("join-room", id);
@@ -41,6 +40,11 @@ export default function Page() {
         <div className="flex-1 flex flex-col justify-center items-start text-white px-20 w-full">
           <p className="text-[62px] font-bold text-start">
             {content.component}
+            <a
+              href={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${content.cid}/PNG`}
+            >
+              s
+            </a>
           </p>
           <div className="flex justify-cenZter mt-2">
             <p className="text-[24px] max-w-[70ch] text-justify">
@@ -93,12 +97,12 @@ export default function Page() {
                 </div>
               </div>
               <div className="flex-1 flex justify-center items-center h-full w-full bg-[#f5f5f5]">
-                {image2D && viewMode === "2D" && (
+                {viewMode === "2D" && (
                   <Image
                     src={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${content.cid}/PNG`}
                     alt="2D Image"
-                    width={900}
-                    height={900}
+                    width={400}
+                    height={400}
                     objectFit="contain"
                     // height={900}
                   />
