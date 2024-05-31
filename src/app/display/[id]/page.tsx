@@ -18,28 +18,6 @@ export default function Page() {
   const [image2D, setImage2D] = useState<any>(null);
 
   useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const response = await fetch(
-          `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${content.cid}/PNG`
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const blob = await response.blob();
-        const imageUrl = URL.createObjectURL(blob);
-        setImage2D(imageUrl);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    if (content.cid) {
-      fetchImage();
-    }
-  }, [content.cid]);
-
-  useEffect(() => {
     socket.emit("join-room", id);
 
     socket.on("content-change", (data) => {
@@ -117,7 +95,7 @@ export default function Page() {
               <div className="flex-1 flex justify-center items-center h-full w-full bg-[#f5f5f5]">
                 {image2D && viewMode === "2D" && (
                   <Image
-                    src={image2D}
+                    src={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${content.cid}/PNG`}
                     alt="2D Image"
                     width={900}
                     height={900}

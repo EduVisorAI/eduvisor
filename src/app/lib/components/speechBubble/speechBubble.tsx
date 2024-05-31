@@ -9,6 +9,7 @@ import { Button } from "../button/button";
 import { MdiShowOutline } from "../../assets/show-outline";
 import { SolarRefreshCircleLinear } from "../../assets/refresh-circle";
 import { socket } from "../../../socket";
+import Image from "next/image";
 
 export const SpeechBubble: React.FC<{
   speaker: string;
@@ -62,11 +63,19 @@ export const SpeechBubble: React.FC<{
         </p>
 
         {props.cid && (
-          <iframe
-            className="my-2"
-            style={{ width: "300px", height: "300px" }}
-            src={`https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`}
-          ></iframe>
+          <div className="flex gap-4 my-2">
+            <iframe
+              style={{ width: "300px", height: "300px" }}
+              src={`https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`}
+            ></iframe>
+            <Image
+              src={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${props.cid}/PNG`}
+              alt="2D Image"
+              width={300}
+              height={300}
+              style={{ border: "1px solid #000" }} // Agrega esta línea
+            />
+          </div>
         )}
         <div className="flex gap-3 mt-2">
           <Button
