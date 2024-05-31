@@ -68,8 +68,9 @@ export const SpeechBubble: React.FC<{
                 "send-to-display",
                 {
                   text: props.text,
-                  image: `https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`,
-                  component: props.component
+                  image3d: `https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`,
+                  component: props.component,
+                  cid: props.cid
                 },
                 props.chatId
               );

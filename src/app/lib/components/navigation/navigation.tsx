@@ -133,10 +133,10 @@ export const Navigation = () => {
                 <div className="flex justify-center items-center gap-2 mb-5">
                   <button
                     onClick={newChatHandler}
-                    className={`${styles["btn"]} bg-[#5661F6] hover:bg-[#4C53D7] gap-2 rounded-full items-center text-white py-3 flex-1`}
+                    className={`${styles["btn"]} bg-[#5661F6] hover:bg-[#4C53D7] gap-2 rounded-full items-center text-white py-3 flex-1 m-0`}
                   >
                     <IcBaselinePlus />
-                    <p className="mt-[2px]">Nuevo chat</p>
+                    <p>Nuevo chat</p>
                   </button>
                   <button className="rounded-full bg-black p-3 flex justify-center items-center">
                     <img src={"/search.png"} />

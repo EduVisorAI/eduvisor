@@ -52,11 +52,11 @@ export class AI extends Speaker {
     try {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      myHeaders.append("userId", userId ?? "");
-      myHeaders.append("chatId", chatId ?? "");
 
       const raw = JSON.stringify({
-        message: prompt.content
+        message: prompt.content,
+        userId: userId,
+        chatId: chatId
       });
 
       //  {"response": "string", "cid": "number"}
