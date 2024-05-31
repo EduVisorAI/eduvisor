@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy container app to Azure Web App - EduVisor
 
 on:
@@ -22,15 +19,16 @@ jobs:
       - name: Log in to registry
         uses: docker/login-action@v3.2.0
         with:
-          registry: https://eduvisorcr.azurecr.io/
-          username: ${{ secrets.AzureAppService_ContainerUsername_8d6002f267154c6ea62d352c84ca52e9 }}
-          password: ${{ secrets.AzureAppService_ContainerPassword_ed3e5d521c1b4f31a063c5246984d2ac }}
+          registry: eduvisorcr.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and push container image to registry
-        uses: docker/build-push-action@v5.3.0
+        uses: docker/build-push-action@v3
         with:
+          context: .
           push: true
-          tags: eduvisorcr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_8d6002f267154c6ea62d352c84ca52e9 }}/eduvisor:${{ github.sha }}
+          tags: eduvisorcr.azurecr.io/eduvisor:${{ github.sha }}
           file: ./Dockerfile
 
   deploy:
@@ -47,5 +45,5 @@ jobs:
         with:
           app-name: "EduVisor"
           slot-name: "Production"
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_461047d0c30b4cf68afa31c2487d46c0 }}
-          images: "eduvisorcr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_8d6002f267154c6ea62d352c84ca52e9 }}/eduvisor:${{ github.sha }}"
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile }}
+          images: "eduvisorcr.azurecr.io/eduvisor:${{ github.sha }}"
