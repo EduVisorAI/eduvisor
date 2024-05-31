@@ -22,15 +22,15 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v2
       with:
-        registry: https://eduvisorcr.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_8d6002f267154c6ea62d352c84ca52e9 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_ed3e5d521c1b4f31a063c5246984d2ac }}
+        registry: https://eduvisoracr.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_b9843ce492b6466e9d406b842d6cb7ef }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_43a7d0831ae34aabb3d18f2099070362 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: eduvisorcr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_8d6002f267154c6ea62d352c84ca52e9 }}/eduvisor:${{ github.sha }}
+        tags: eduvisoracr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_b9843ce492b6466e9d406b842d6cb7ef }}/eduvisor:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'EduVisor'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_461047d0c30b4cf68afa31c2487d46c0 }}
-        images: 'eduvisorcr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_8d6002f267154c6ea62d352c84ca52e9 }}/eduvisor:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_97504f10c8714930ba34dc76b7d8c2e2 }}
+        images: 'eduvisoracr.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_b9843ce492b6466e9d406b842d6cb7ef }}/eduvisor:${{ github.sha }}'
