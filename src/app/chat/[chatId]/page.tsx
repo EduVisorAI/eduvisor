@@ -46,6 +46,10 @@ export default function Page() {
   //   setInput(input);
   // };
 
+  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+    chatEndRef.current?.scrollIntoView({ behavior });
+  };
+
   const onTemplateClicked = (template: string) => {
     setInput(template);
   };
@@ -54,6 +58,7 @@ export default function Page() {
     setError("");
     if (prompt.trim().length > 0) {
       try {
+        chatEndRef!.current!.scrollIntoView({ behavior: "smooth" });
         setLoading(true);
 
         await sendPrompt(chatId, prompt, auth?.user?.email as string);
@@ -61,7 +66,6 @@ export default function Page() {
         setError("Vaya... se ha producido un error. Inténtalo de nuevo.");
       }
       setLoading(false);
-      chatEndRef!.current!.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -90,7 +94,7 @@ export default function Page() {
         {conversation && conversation.speeches.length > 0 && (
           <div className={styles["chat-container"]}>
             {chatId && (
-              <div className="hidden md:flex justify-end">
+              <div className="sticky top-0 z-50 md:flex justify-end">
                 <Button
                   level="primary"
                   fullWidth={false}

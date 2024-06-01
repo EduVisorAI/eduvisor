@@ -4,5 +4,5 @@
 }
 
 .container {
-  @apply w-full mx-auto flex flex-col grow overflow-auto;
+  @apply w-full mx-auto flex flex-col grow overflow-hidden;
 }
