@@ -58,7 +58,6 @@ export default function Page() {
     setError("");
     if (prompt.trim().length > 0) {
       try {
-        chatEndRef!.current!.scrollIntoView({ behavior: "smooth" });
         setLoading(true);
 
         await sendPrompt(chatId, prompt, auth?.user?.email as string);
@@ -66,6 +65,7 @@ export default function Page() {
         setError("Vaya... se ha producido un error. Inténtalo de nuevo.");
       }
       setLoading(false);
+      chatEndRef!.current!.scrollIntoView({ behavior: "smooth" });
     }
   };
 
