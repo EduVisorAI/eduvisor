@@ -68,11 +68,9 @@ export const SpeechBubble: React.FC<{
               style={{ width: "300px", height: "300px" }}
               src={`https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`}
             ></iframe>
-            <Image
-              src={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${props.cid}/PNG`}
+            <img
+              src={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${props.cid}/PNG?image_size=300x299`}
               alt="2D Image"
-              width={300}
-              height={300}
               style={{ border: "1px solid #000" }} // Agrega esta línea
             />
           </div>
