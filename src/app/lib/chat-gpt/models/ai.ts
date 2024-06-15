@@ -1,9 +1,14 @@
-import { Conversation } from "./conversation";
+import { AIModel, Conversation } from "./conversation";
 import { Prompt } from "./prompt";
 import { Race, Speaker } from "./speaker";
 import { Temperature } from "./temperature";
 import { Token } from "./token";
 // import { Configuration, OpenAIApi } from "openai";
+
+const urls = {
+  CHEMICAL: "https://eduvisor-backend.azurewebsites.net/api/chemical",
+  ART: "https://eduvisor-backend.azurewebsites.net/api/art"
+};
 
 export class AI extends Speaker {
   temperature: Temperature;
@@ -24,7 +29,22 @@ export class AI extends Speaker {
   }
 
   async think(conversation: Conversation, userId: string) {
-    const response = await this.request(this.prompt, conversation.id(), userId);
+    const model = conversation.model() as AIModel;
+
+    var url;
+
+    if (model === AIModel.CHEMICAL) {
+      url = urls.CHEMICAL;
+    } else if (model === AIModel.ART) {
+      url = urls.ART;
+    }
+
+    const response = await this.request(
+      url!,
+      this.prompt,
+      conversation.id(),
+      userId
+    );
 
     return response;
   }
@@ -48,7 +68,12 @@ export class AI extends Speaker {
     });
   }
 
-  private async request(prompt: Prompt, chatId: string, userId: string) {
+  private async request(
+    url: string,
+    prompt: Prompt,
+    chatId: string,
+    userId: string
+  ) {
     try {
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -59,16 +84,12 @@ export class AI extends Speaker {
         chatId: chatId
       });
 
-      //  {"response": "string", "cid": "number"}
-      const res = await fetch(
-        "https://eduvisor-backend.azurewebsites.net/api/chemical",
-        {
-          method: "POST",
-          headers: myHeaders,
-          body: raw,
-          redirect: "follow"
-        }
-      );
+      const res = await fetch(url, {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+      });
 
       const json = await res.json();
       return this.speak(json);

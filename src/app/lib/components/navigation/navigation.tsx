@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 import { Menu, MenuItem } from "@szhsin/react-menu";
@@ -12,25 +13,35 @@ import { auth } from "../../firebase/firebase";
 import ShortUniqueId from "short-unique-id";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "../button/button";
+import { RenderedConversation } from "../../chat-gpt/renderer";
 
 export const Navigation = () => {
   const [, setChatTitle] = useState("");
+  const [conversation, setConversation] = useState<
+    RenderedConversation | undefined
+  >();
   const { chatId } = useParams<{ chatId: string }>();
-  const { newConvo, conversations } = useContext(AIContext);
+  const { conversations } = useContext(AIContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (chatId && conversations.find((convo) => convo.id === chatId)) {
-      const convoFound = conversations.find((convo) => convo.id === chatId);
-      setChatTitle(convoFound!.title);
+    const convoFound = getConversation() as RenderedConversation | undefined;
+
+    if (convoFound) {
+      setConversation(conversations.find((c) => c.id === chatId));
+      setChatTitle(convoFound.title);
     } else {
       setChatTitle("");
     }
   }, [chatId, conversations]);
 
+  const getConversation = () => {
+    return conversations.find((c) => c.id === chatId) && chatId;
+  };
+
   const newChatHandler = () => {
     const uuid = new ShortUniqueId({ length: 6 }).randomUUID().toUpperCase();
-    newConvo(uuid);
     router.push(`/chat/${uuid}`);
   };
 
@@ -105,7 +116,7 @@ export const Navigation = () => {
           </Drawer>
         </div>
         {chatId && (
-          <div className="flex md:hidden justify-end">
+          <div className="flex gap-2 md:hidden justify-end">
             <button
               className={`${styles["btn"]} ${styles["primary"]} m-0`}
               onClick={() => {
@@ -114,6 +125,9 @@ export const Navigation = () => {
             >
               Room {chatId}
             </button>
+            <Button level="secondary" fullWidth={false} submitting>
+              {conversation !== null ? conversation?.model : ""}
+            </Button>
           </div>
         )}
       </div>

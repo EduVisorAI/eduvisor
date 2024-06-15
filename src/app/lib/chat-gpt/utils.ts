@@ -1,12 +1,9 @@
 import { Speaker } from "./models/speaker";
+import { ChemicalContent, ArtContent } from "./renderer";
 
 export interface Speech {
   speaker: Speaker;
-  content: {
-    answer: string;
-    component?: string;
-    cid?: string;
-  };
+  content: ChemicalContent | ArtContent;
 }
 
 export interface Summary {

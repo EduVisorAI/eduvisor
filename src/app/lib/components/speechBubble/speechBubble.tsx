@@ -9,14 +9,18 @@ import { Button } from "../button/button";
 import { MdiShowOutline } from "../../assets/show-outline";
 import { SolarRefreshCircleLinear } from "../../assets/refresh-circle";
 import { socket } from "../../../socket";
-import Image from "next/image";
+import { AIModel } from "../../chat-gpt/models/conversation";
+import {
+  ArtContent,
+  ChemicalContent,
+  RenderedSpeech
+} from "../../chat-gpt/renderer";
 
 export const SpeechBubble: React.FC<{
-  speaker: string;
-  text: string;
   chatId?: string;
-  component?: string;
-  cid?: string;
+  model?: AIModel;
+  speaker?: string;
+  speech: RenderedSpeech;
   loading?: boolean;
   animate: boolean;
   delay?: number;
@@ -36,7 +40,7 @@ export const SpeechBubble: React.FC<{
     const content = props.loading ? (
       <img src={Loader.src} width={40} alt="Loading" />
     ) : (
-      <p className="font-bold">{props.text}</p>
+      <p className="font-bold">{props.speech.content.answer}</p>
     );
 
     return (
@@ -47,14 +51,19 @@ export const SpeechBubble: React.FC<{
     );
   };
 
-  const AIBubble = () => {
-    const content = props.loading ? (
-      <img src={Loader.src} width={40} alt="Loading" />
-    ) : (
+  const ChemicalContentComponent = ({ speech }: { speech: RenderedSpeech }) => {
+    const content = speech.content as ChemicalContent;
+    const socketContent = {
+      answer: content.answer,
+      component: content.component,
+      cid: content.cid
+    };
+
+    return (
       <>
         <p className="font-medium text-[18px] mb-2">
-          {props.text &&
-            props.text.split("\n").map((line: string, i: any) => (
+          {content.answer &&
+            content.answer.split("\n").map((line: string, i: any) => (
               <Fragment key={i}>
                 {line}
                 <br />
@@ -62,17 +71,19 @@ export const SpeechBubble: React.FC<{
             ))}
         </p>
 
-        {props.cid && (
-          <div className="flex gap-4 my-2">
+        {content.cid && (
+          <div className="flex flex-col lg:flex-row gap-4 my-2">
             <iframe
               style={{ width: "300px", height: "300px" }}
-              src={`https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`}
+              src={`https://embed.molview.org/v1/?mode=balls&cid=${content.cid}`}
             ></iframe>
-            <img
-              src={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${props.cid}/PNG?image_size=300x299`}
-              alt="2D Image"
-              style={{ border: "1px solid #000" }} // Agrega esta línea
-            />
+            <div className="w-[300px] h-[299px]">
+              <img
+                src={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${content.cid}/PNG?image_size=300x299`}
+                alt="2D Image"
+                style={{ border: "1px solid #000" }} // Agrega esta línea
+              />
+            </div>
           </div>
         )}
         <div className="flex gap-3 mt-2">
@@ -83,10 +94,8 @@ export const SpeechBubble: React.FC<{
               socket.emit(
                 "send-to-display",
                 {
-                  text: props.text,
-                  image3d: `https://embed.molview.org/v1/?mode=balls&cid=${props.cid}`,
-                  component: props.component,
-                  cid: props.cid
+                  model: props.model,
+                  content: socketContent
                 },
                 props.chatId
               );
@@ -104,6 +113,81 @@ export const SpeechBubble: React.FC<{
             </div>
           </Button>
         </div>
+      </>
+    );
+  };
+
+  const ArtContentComponent = ({ speech }: { speech: RenderedSpeech }) => {
+    const content = speech.content as ArtContent;
+    const socketContent = {
+      answer: content.answer,
+      imageUrl: content.imageUrl
+    };
+
+    return (
+      <>
+        <p className="font-medium text-[18px] mb-2">
+          {content.answer &&
+            content.answer.split("\n").map((line: string, i: any) => (
+              <Fragment key={i}>
+                {line}
+                <br />
+              </Fragment>
+            ))}
+        </p>
+
+        {content.imageUrl && (
+          <div className="w-[300px] h-[299px] my-2">
+            <img
+              src={`${content.imageUrl}`}
+              alt="Art Image"
+              className="object-auto w-full h-full"
+              style={{ border: "1px solid #000" }}
+            />
+          </div>
+        )}
+
+        <div className="flex gap-3 mt-2">
+          <Button
+            level="secondary"
+            fullWidth={false}
+            clickHandler={() => {
+              socket.emit(
+                "send-to-display",
+                {
+                  model: props.model,
+                  content: socketContent
+                },
+                props.chatId
+              );
+            }}
+          >
+            <div className="flex gap-1 items-center">
+              <MdiShowOutline />
+              <p className="text-sm font-bold">Mostrar en display</p>
+            </div>
+          </Button>
+          <Button level="secondary" fullWidth={false}>
+            <div className="flex gap-1 items-center">
+              <SolarRefreshCircleLinear />
+              <p className="text-sm font-bold">Regenerar</p>
+            </div>
+          </Button>
+        </div>
+      </>
+    );
+  };
+
+  const AIBubble = () => {
+    const content = props.loading ? (
+      <img src={Loader.src} width={40} alt="Loading" />
+    ) : (
+      <>
+        {props.model === AIModel.CHEMICAL ? (
+          <ChemicalContentComponent speech={props.speech} />
+        ) : (
+          <ArtContentComponent speech={props.speech} />
+        )}
       </>
     );
 

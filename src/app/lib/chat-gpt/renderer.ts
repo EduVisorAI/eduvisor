@@ -1,14 +1,25 @@
 import { AI } from "./models/ai";
-import { Conversation } from "./models/conversation";
+import { AIModel, Conversation } from "./models/conversation";
 import { Prompt } from "./models/prompt";
 import { Speaker } from "./models/speaker";
 import { Temperature } from "./models/temperature";
 import { Token } from "./models/token";
 import { Speech } from "./utils";
 
+export interface ChemicalContent {
+  answer: string;
+  component?: string;
+  cid?: string;
+}
+
+export interface ArtContent {
+  answer: string;
+  imageUrl?: string;
+}
+
 export type RenderedSpeech = {
   speaker: string;
-  content: { answer: string; component?: string; cid?: string };
+  content: ChemicalContent | ArtContent;
 };
 
 export type RenderedConversation = {
@@ -16,6 +27,7 @@ export type RenderedConversation = {
   title: string;
   description: string;
   speeches: RenderedSpeech[];
+  model: AIModel;
 };
 
 export class Renderer {
@@ -39,6 +51,7 @@ export class Renderer {
       id: convo.id(),
       title: convo.title(),
       description: convo.description(),
+      model: convo.model(),
       speeches: renderedConvosArr
     };
   }
@@ -46,11 +59,7 @@ export class Renderer {
   speech(speech: Speech) {
     return {
       speaker: this.speaker(speech.speaker).race.valueOf(),
-      content: {
-        answer: speech.content.answer,
-        cid: speech.content.cid,
-        component: speech.content.component
-      }
+      content: speech.content
     };
   }
 

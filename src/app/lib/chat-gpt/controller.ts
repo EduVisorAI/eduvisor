@@ -1,5 +1,5 @@
 import { AI } from "./models/ai";
-import { Conversation } from "./models/conversation";
+import { AIModel, Conversation } from "./models/conversation";
 import { Human } from "./models/human";
 import { Prompt } from "./models/prompt";
 import { Temperature } from "./models/temperature";

@@ -13,7 +13,7 @@ export class Speaker {
     this.race = race;
   }
 
-  speak(content: { answer: string; component?: string; cid?: string }) {
+  speak(content: { answer: string }) {
     const speech = {
       speaker: this,
       content: content

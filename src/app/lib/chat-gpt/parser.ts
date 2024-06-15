@@ -1,10 +1,10 @@
 import { AI } from "./models/ai";
-import { Conversation } from "./models/conversation";
+import { AIModel, Conversation } from "./models/conversation";
 import { Prompt } from "./models/prompt";
 import { Race, Speaker } from "./models/speaker";
 import { Temperature } from "./models/temperature";
 import { Token } from "./models/token";
-import { RenderedConversation } from "./renderer";
+import { ArtContent, ChemicalContent, RenderedConversation } from "./renderer";
 import { Speech } from "./utils";
 
 export class Parser {
@@ -17,16 +17,41 @@ export class Parser {
       } else {
         speaker = new Speaker(Race.AI);
       }
-      speeches.push({
-        speaker: speaker,
-        content: {
-          answer: convo.speeches[i].content.answer,
-          cid: convo.speeches[i].content.cid,
-          component: convo.speeches[i].content.component
-        }
-      });
+
+      var content: ChemicalContent | ArtContent;
+
+      if (convo.model === AIModel.CHEMICAL) {
+        var c = convo.speeches[i].content as ChemicalContent;
+        content = {
+          answer: c.answer,
+          cid: c.cid,
+          component: c.component
+        };
+
+        speeches.push({
+          speaker: speaker,
+          content
+        });
+      } else if (convo.model === AIModel.ART) {
+        var a = convo.speeches[i].content as ArtContent;
+        content = {
+          answer: a.answer,
+          imageUrl: a.imageUrl
+        };
+
+        speeches.push({
+          speaker: speaker,
+          content
+        });
+      }
     }
-    return new Conversation(speeches, convo.id, convo.title, convo.description);
+    return new Conversation(
+      convo.model,
+      speeches,
+      convo.id,
+      convo.title,
+      convo.description
+    );
   }
 
   speech(speech: { speaker: Race; content: string }) {

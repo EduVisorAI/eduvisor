@@ -1,12 +1,19 @@
 import { Speech, Summary } from "../utils";
 
+export enum AIModel {
+  CHEMICAL = "QUIMICA",
+  ART = "ARTE"
+}
+
 export class Conversation {
   private _id: string;
   private _title: string;
   private _description: string;
+  private _model: AIModel;
   speeches: Speech[];
 
   constructor(
+    model: AIModel,
     speeches?: Speech[],
     id?: string,
     title?: string,
@@ -21,6 +28,7 @@ export class Conversation {
     this._id = id ? id : "";
     this._title = title ? title : "";
     this._description = description ? description : "";
+    this._model = model;
   }
 
   add(speech: Speech) {
@@ -32,6 +40,10 @@ export class Conversation {
       this._title = summary.title;
       this._description = summary.description;
     }
+  }
+
+  model() {
+    return this._model;
   }
 
   id() {

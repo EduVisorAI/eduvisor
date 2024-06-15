@@ -7,7 +7,7 @@
 }
 
 .prompts-container {
-  @apply flex flex-col items-center md:items-stretch md:flex-row;
+  @apply flex flex-col justify-center items-center md:items-stretch md:flex-row;
 }
 
 .prompt-text {

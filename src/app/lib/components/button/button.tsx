@@ -1,23 +1,30 @@
 import styles from "./button.module.css";
 
-export const Button: React.FC<
-  React.PropsWithChildren<{
-    level: "primary" | "secondary";
-    fullWidth: boolean;
-    rounded?: boolean;
-    clickHandler?: () => void;
-    submitting?: boolean;
-  }>
-> = (props) => {
+type ButtonProps = React.PropsWithChildren<{
+  level: "primary" | "secondary";
+  fullWidth: boolean;
+  rounded?: boolean;
+  clickHandler?: () => void;
+  submitting?: boolean;
+}>;
+
+export const Button: React.FC<ButtonProps> = ({
+  level,
+  fullWidth,
+  rounded = false,
+  clickHandler,
+  submitting = false,
+  children
+}) => {
   let btnStyle;
-  if (props.level === "primary") {
-    if (props.submitting) {
+  if (level === "primary") {
+    if (submitting) {
       btnStyle = styles["primary-disabled"];
     } else {
       btnStyle = styles["primary"];
     }
   } else {
-    if (props.submitting) {
+    if (submitting) {
       btnStyle = styles["secondary-disabled"];
     } else {
       btnStyle = styles["secondary"];
@@ -25,14 +32,14 @@ export const Button: React.FC<
   }
   return (
     <button
-      onClick={props.clickHandler}
-      onKeyDown={props.clickHandler}
+      onClick={clickHandler}
+      onKeyDown={clickHandler}
       className={`${styles["btn"]} ${btnStyle} ${
-        props.fullWidth ? styles["full-width"] : ""
-      } ${props.rounded ? styles["rounded"] : ""} `}
-      disabled={props.submitting ? props.submitting : false}
+        fullWidth ? styles["full-width"] : ""
+      } ${rounded ? styles["rounded"] : ""} `}
+      disabled={submitting ? submitting : false}
     >
-      {props.children}
+      {children}
     </button>
   );
 };

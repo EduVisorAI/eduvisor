@@ -3,13 +3,14 @@
 import React, { useEffect, useState } from "react";
 import { RenderedConversation } from "../chat-gpt/renderer";
 import { Controller } from "../chat-gpt/controller";
+import { AIModel } from "../chat-gpt/models/conversation";
 
 export const AIContext = React.createContext<{
   conversations: RenderedConversation[];
   temperature: number;
   token: number;
   prompt: string;
-  newConvo: (uuid: string) => void;
+  newConvo: (uuid: string, model: AIModel) => void;
   sendPrompt: (id: string, prompt: string, userId: string) => Promise<void>;
   configure: (temp: number, token: number, prompt: string) => void;
 }>({
@@ -17,7 +18,7 @@ export const AIContext = React.createContext<{
   temperature: 0,
   token: 2048,
   prompt: "",
-  newConvo: (_uuid: string) => {},
+  newConvo: (_uuid: string, _model: AIModel) => {},
   sendPrompt: (_id: string, _prompt: string, _userId: string) =>
     new Promise((_resolve, _reject) => {}),
   configure: (_temp: number, _token: number, _prompt: string) => {}
@@ -41,13 +42,14 @@ export const AIContextProvider: React.FC<React.PropsWithChildren> = (props) => {
     setPrompt(ai.prompt);
   }, []);
 
-  const newConvo = async (uuid: string) => {
+  const newConvo = async (uuid: string, model: AIModel) => {
     const chatGptApi = new Controller();
     const addedConvo = chatGptApi.newConvo({
       id: uuid,
       title: "",
       description: "",
-      speeches: []
+      speeches: [],
+      model: model
     });
     setConversations((prevConvos) => [...prevConvos, addedConvo]);
   };

@@ -3,7 +3,7 @@ import styles from "./home.module.css";
 import { motion } from "framer-motion";
 import { useContext } from "react";
 import React from "react";
-import { AIContext, AIContextProvider } from "./lib/contexts/ai-context";
+import { AIContext } from "./lib/contexts/ai-context";
 import { Button } from "./lib/components/button/button";
 import ShortUniqueId from "short-unique-id";
 import { useRouter } from "next/navigation";
@@ -12,11 +12,9 @@ import PrivateRoute from "./lib/components/private_route";
 
 export default function Page() {
   const router = useRouter();
-  const aiContext = useContext(AIContext);
 
   const newChatHandler = () => {
     const uuid = new ShortUniqueId({ length: 6 }).randomUUID().toUpperCase();
-    aiContext.newConvo(uuid);
     router.push(`/chat/${uuid}`);
   };
 
