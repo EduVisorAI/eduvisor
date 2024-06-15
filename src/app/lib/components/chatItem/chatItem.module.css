@@ -1,5 +1,5 @@
 .card {
-  @apply transition-all ease-in-out duration-300 px-2 py-4  my-2;
+  @apply transition-all ease-in-out duration-300 px-2 py-4  my-0;
 }
 
 .active {

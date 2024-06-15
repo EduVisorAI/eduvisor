@@ -171,7 +171,7 @@ export const Navigation = () => {
                   </button>
                 </div>
               </div>
-              <div className="flex flex-col flex-1 overflow-y-auto h-full ml-1">
+              <div className="flex flex-col flex-1 overflow-y-auto h-full ml-1 mt-2">
                 {conversations.map((convo, index) => (
                   <Link key={index} href={`/chat/${convo.id}`}>
                     <ChatItem convo={convo} isActive={chatId === convo.id} />

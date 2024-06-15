@@ -137,12 +137,11 @@ export const SpeechBubble: React.FC<{
         </p>
 
         {content.imageUrl && (
-          <div className="w-[300px] h-[299px] my-2">
+          <div className="w-[300px] h-[300px] my-2">
             <img
               src={`${content.imageUrl}`}
               alt="Art Image"
-              className="object-auto w-full h-full"
-              style={{ border: "1px solid #000" }}
+              className="object-contain object-left min-w-full w-full h-full"
             />
           </div>
         )}
