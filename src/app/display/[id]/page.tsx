@@ -71,25 +71,24 @@ export default function Page() {
     return (
       <div
         className={`${
-          chemicalContent.answer !== null ? "flex" : ""
-        } bg-black h-full`}
+          chemicalContent.answer !== null
+            ? "flex flex-col-reverse xl:flex-row"
+            : "h-full"
+        } bg-black h-auto xl:h-full`}
       >
         <div
           className={`${
             chemicalContent.cid ? "[flex-basis:50%]" : ""
-          } overflow-auto flex items-center justify-center text-white `}
+          } overflow-auto text-white `}
         >
-          <div className="flex flex-col pt-[10rem] pb-[6rem] px-20">
-            <h1 className="text-8xl font-bold text-start flex-1">
+          <div className="py-5 lg:py-20 px-10 lg:px-10">
+            <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-start mb-3 xl:mb-7 flex-1">
               {chemicalContent.component}
-              <a
-                href={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${chemicalContent.cid}/PNG`}
-              ></a>
             </h1>
             {chemicalContent.answer.split("\n").map((line, i) => (
               <p
                 key={i}
-                className="max-w-[70ch] text-xl md:text-2xl lg:text-3xl text-justify flex-1"
+                className=" text-2xl md:text-4xl lg:text-5xl lg:[line-height:1.15] break-words"
               >
                 {line}
                 <br />
@@ -97,9 +96,10 @@ export default function Page() {
             ))}
           </div>
         </div>
+        <div className="xl:hidden bg-white/20 w-full h-[1px]" />
         {chemicalContent.cid && (
           <>
-            <div className=" bg-white/20 h-full w-[1px]" />
+            <div className="hidden xl:block bg-white/20 h-full w-[1px]" />
             <div className="[flex-basis:50%] relative z-10">
               <div className="fixed flex justify-center items-center top-[100px] right-[40px]">
                 <p className="text-[#989898] text-md mr-2">Ver como</p>
@@ -129,7 +129,7 @@ export default function Page() {
               </div>
               <div
                 ref={imageContainerRef}
-                className="flex justify-center z-0 items-center h-full w-full bg-[#f5f5f5]"
+                className="flex justify-center z-0 items-center h-full  w-full bg-[#f5f5f5]"
               >
                 {viewMode === "2D" && (
                   <img
@@ -142,7 +142,7 @@ export default function Page() {
                   <iframe
                     src={`https://embed.molview.org/v1/?mode=balls&cid=${chemicalContent.cid}`}
                     title="Content Image 3D"
-                    className="w-full h-full"
+                    className="w-full h-full min-h-[500px]"
                   />
                 )}
               </div>
@@ -161,20 +161,22 @@ export default function Page() {
     return (
       <div
         className={`${
-          artContent.answer !== null ? "flex" : ""
-        } bg-black h-full`}
+          artContent.answer !== null ? "flex flex-col-reverse xl:flex-row" : ""
+        } bg-black h-auto xl:h-full`}
       >
         <div
           className={`${
             artContent.imageUrl ? "[flex-basis:50%]" : ""
-          } overflow-auto flex items-center justify-center text-white `}
+          } overflow-auto text-white`}
         >
-          <div className="flex flex-col pt-[10rem] pb-[6rem] px-20">
-            <h1 className="text-8xl font-bold text-start flex-1">Contenido</h1>
+          <div className="py-5 lg:py-20 px-10 lg:px-10">
+            <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-start mb-3 xl:mb-7 flex-1">
+              Descripción
+            </h1>
             {artContent.answer.split("\n").map((line, i) => (
               <p
                 key={i}
-                className="max-w-[70ch] text-xl md:text-2xl lg:text-3xl text-justify flex-1"
+                className=" text-2xl md:text-4xl lg:text-5xl lg:[line-height:1.15] break-words"
               >
                 {line}
                 <br />
@@ -182,9 +184,10 @@ export default function Page() {
             ))}
           </div>
         </div>
+        <div className="xl:hidden bg-white/20 w-full h-[1px]" />
         {artContent.imageUrl && (
           <>
-            <div className=" bg-white/20 h-full w-[1px]" />
+            <div className="hidden xl:block bg-white/20 h-full w-[1px]" />
             <div className="[flex-basis:50%] relative z-10">
               <div
                 ref={imageContainerRef}
@@ -210,7 +213,7 @@ export default function Page() {
       </Head>
       <div
         id="display-container"
-        className="w-full h-full relative overflow-hidden"
+        className="w-full xl:h-full relative overflow-hidden"
       >
         <div className="bg-[#E42322] w-full h-[60px] relative z-20">
           <p className="text-white text-xl font-bold pl-4 py-4">Room {id}</p>
