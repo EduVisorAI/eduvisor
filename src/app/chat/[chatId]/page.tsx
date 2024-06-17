@@ -32,7 +32,7 @@ export default function Page() {
     RenderedConversation | undefined
   >();
   const { chatId } = useParams<{ chatId: string }>();
-  const { sendPrompt, conversations } = useContext(AIContext);
+  const { sendPrompt, regeneratePrompt, conversations } = useContext(AIContext);
   const router = useRouter();
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -72,13 +72,20 @@ export default function Page() {
     }
   };
 
+  const handleRegeneratePrompt = async (chatId: string) => {
+    setLoading(true);
+    await regeneratePrompt(chatId, auth?.user?.email as string);
+    setLoading(false);
+    chatEndRef!.current!.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <PrivateRoute>
       <Container>
         {temporalChat && (
           <div className={styles["secondary-section"]}>
             <h2 className={styles["secondary-heading"]}>
-              Elige un area de conocimiento
+              Elige un área de conocimiento
             </h2>
             <motion.div
               className={styles["prompts-container"]}
@@ -135,6 +142,12 @@ export default function Page() {
                       speaker={speaker}
                       chatId={chatId}
                       model={conversation.model}
+                      handleRegeneratePrompt={handleRegeneratePrompt}
+                      // canRegenerate={
+                      //   id === conversation.speeches.length - 1 &&
+                      //   speaker === "ai"
+                      // }
+                      canRegenerate={false}
                       speech={speech}
                       animate={animate}
                     />

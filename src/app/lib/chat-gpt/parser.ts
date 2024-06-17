@@ -34,7 +34,8 @@ export class Parser {
         });
       } else if (convo.model === AIModel.ART) {
         var a = convo.speeches[i].content as ArtContent;
-        content = {
+				content = {
+					title: a.title,
           answer: a.answer,
           imageUrl: a.imageUrl
         };

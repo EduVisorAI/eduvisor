@@ -8,6 +8,7 @@ import "./display.module.css";
 import { ArtContent, ChemicalContent } from "@/app/lib/chat-gpt/renderer";
 import { AIModel } from "@/app/lib/chat-gpt/models/conversation";
 import Head from "next/head";
+import { MarkdownRenderer } from "@/app/lib/components/markdownRenderer/markdownRenderer";
 
 interface Dimensions {
   width: number;
@@ -25,6 +26,7 @@ export default function Page() {
     model: null,
     content: null
   });
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const [viewMode, setViewMode] = useState("2D");
 
@@ -49,13 +51,33 @@ export default function Page() {
     };
   }, [id]);
 
+  const handleNextImage = () => {
+    if (data.content === null) return;
+
+    var artContent = data.content as ArtContent;
+    const urls = artContent.imageUrl as string[];
+
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % urls.length);
+  };
+
+  const handlePreviousImage = () => {
+    if (data.content === null) return;
+
+    var artContent = data.content as ArtContent;
+    const urls = artContent.imageUrl as string[];
+
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex - 1 + urls.length) % urls.length
+    );
+  };
+
   const showContent = () => {
     if (data.model === null) {
       return (
         <div className="bg-black h-full flex justify-center items-center">
-          <p className="w-full text-3xl text-center text-white">
+          {/* <p className="w-full text-3xl text-center text-white">
             {"A la espera de contenido"}
-          </p>
+          </p> */}
         </div>
       );
     }
@@ -85,7 +107,10 @@ export default function Page() {
             <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-start mb-3 xl:mb-7 flex-1">
               {chemicalContent.component}
             </h1>
-            {chemicalContent.answer.split("\n").map((line, i) => (
+            <p className="text-2xl md:text-4xl lg:text-5xl lg:[line-height:1.15] break-words">
+              <MarkdownRenderer markdown={chemicalContent.answer} />
+            </p>
+            {/* {chemicalContent.answer.split("\n").map((line, i) => (
               <p
                 key={i}
                 className=" text-2xl md:text-4xl lg:text-5xl lg:[line-height:1.15] break-words"
@@ -93,7 +118,7 @@ export default function Page() {
                 {line}
                 <br />
               </p>
-            ))}
+            ))} */}
           </div>
         </div>
         <div className="xl:hidden bg-white/20 w-full h-[1px]" />
@@ -171,7 +196,7 @@ export default function Page() {
         >
           <div className="py-5 lg:py-20 px-10 lg:px-10">
             <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-start mb-3 xl:mb-7 flex-1">
-              Descripción
+              {artContent.title}
             </h1>
             {artContent.answer.split("\n").map((line, i) => (
               <p
@@ -185,18 +210,35 @@ export default function Page() {
           </div>
         </div>
         <div className="xl:hidden bg-white/20 w-full h-[1px]" />
-        {artContent.imageUrl && (
+        {artContent.imageUrl && artContent.imageUrl.length > 0 && (
           <>
             <div className="hidden xl:block bg-white/20 h-full w-[1px]" />
             <div className="[flex-basis:50%] relative z-10">
+              <div className="fixed flex justify-center items-center top-[100px] right-[40px]">
+                <div className="flex border-2 border-[#989898] rounded-[8px]">
+                  <button
+                    className={`font-bold text-2xl tab px-4 py-2 rounded-tl-[8px] rounded-bl-[8px] ${"bg-[#ffdfdf] text-red-700"}`}
+                    onClick={handlePreviousImage}
+                  >
+                    {"<"}
+                  </button>
+                  <div className=" bg-[#989898] h-ful w-[2px]" />
+                  <button
+                    className={`font-bold text-2xl tab px-4 py-2 rounded-tr-[6px] rounded-br-[6px] ${"bg-[#ffdfdf] text-red-700"}`}
+                    onClick={handleNextImage}
+                  >
+                    {">"}
+                  </button>
+                </div>
+              </div>
               <div
                 ref={imageContainerRef}
                 className="flex justify-center z-0 items-center h-full w-full bg-[#f5f5f5]"
               >
                 <img
-                  src={artContent.imageUrl}
+                  src={artContent.imageUrl[currentImageIndex]}
                   alt="Content Image"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-fill object-center"
                 />
               </div>
             </div>

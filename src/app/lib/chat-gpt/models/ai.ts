@@ -92,6 +92,9 @@ export class AI extends Speaker {
       });
 
       const json = await res.json();
+
+      console.log(json);
+
       return this.speak(json);
     } catch (error) {
       throw new Error("There was an error. Please try again.");

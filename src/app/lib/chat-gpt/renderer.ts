@@ -1,3 +1,4 @@
+import { List } from "postcss/lib/list";
 import { AI } from "./models/ai";
 import { AIModel, Conversation } from "./models/conversation";
 import { Prompt } from "./models/prompt";
@@ -14,7 +15,8 @@ export interface ChemicalContent {
 
 export interface ArtContent {
   answer: string;
-  imageUrl?: string;
+  title?: string;
+  imageUrl?: string[];
 }
 
 export type RenderedSpeech = {

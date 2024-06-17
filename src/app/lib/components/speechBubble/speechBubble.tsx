@@ -15,12 +15,16 @@ import {
   ChemicalContent,
   RenderedSpeech
 } from "../../chat-gpt/renderer";
+import SimpleImageSlider from "react-simple-image-slider";
+import { MarkdownRenderer } from "../markdownRenderer/markdownRenderer";
 
 export const SpeechBubble: React.FC<{
   chatId?: string;
   model?: AIModel;
   speaker?: string;
   speech: RenderedSpeech;
+  handleRegeneratePrompt?: (chatId: string) => void;
+  canRegenerate?: boolean;
   loading?: boolean;
   animate: boolean;
   delay?: number;
@@ -62,13 +66,7 @@ export const SpeechBubble: React.FC<{
     return (
       <>
         <p className="font-medium text-[18px] mb-2">
-          {content.answer &&
-            content.answer.split("\n").map((line: string, i: any) => (
-              <Fragment key={i}>
-                {line}
-                <br />
-              </Fragment>
-            ))}
+          {content.answer && MarkdownRenderer({ markdown: content.answer })}
         </p>
 
         {content.cid && (
@@ -106,12 +104,18 @@ export const SpeechBubble: React.FC<{
               <p className="text-sm font-bold">Mostrar en display</p>
             </div>
           </Button>
-          <Button level="secondary" fullWidth={false}>
-            <div className="flex gap-1 items-center">
-              <SolarRefreshCircleLinear />
-              <p className="text-sm font-bold">Regenerar</p>
-            </div>
-          </Button>
+          {props.canRegenerate && (
+            <Button
+              level="secondary"
+              fullWidth={false}
+              clickHandler={() => props.handleRegeneratePrompt!(props.chatId!)}
+            >
+              <div className="flex gap-1 items-center">
+                <SolarRefreshCircleLinear />
+                <p className="text-sm font-bold">Regenerar</p>
+              </div>
+            </Button>
+          )}
         </div>
       </>
     );
@@ -120,6 +124,7 @@ export const SpeechBubble: React.FC<{
   const ArtContentComponent = ({ speech }: { speech: RenderedSpeech }) => {
     const content = speech.content as ArtContent;
     const socketContent = {
+      title: content.title,
       answer: content.answer,
       imageUrl: content.imageUrl
     };
@@ -127,21 +132,17 @@ export const SpeechBubble: React.FC<{
     return (
       <>
         <p className="font-medium text-[18px] mb-2">
-          {content.answer &&
-            content.answer.split("\n").map((line: string, i: any) => (
-              <Fragment key={i}>
-                {line}
-                <br />
-              </Fragment>
-            ))}
+          {content.answer && MarkdownRenderer({ markdown: content.answer })}
         </p>
 
-        {content.imageUrl && (
-          <div className="w-[300px] h-[300px] my-2">
-            <img
-              src={`${content.imageUrl}`}
-              alt="Art Image"
-              className="object-contain object-left min-w-full w-full h-full"
+        {content.imageUrl && Array.isArray(content.imageUrl) && (
+          <div className="relative">
+            <SimpleImageSlider
+              width={300}
+              height={300}
+              images={content.imageUrl}
+              showBullets={true}
+              showNavs={true}
             />
           </div>
         )}
@@ -166,12 +167,18 @@ export const SpeechBubble: React.FC<{
               <p className="text-sm font-bold">Mostrar en display</p>
             </div>
           </Button>
-          <Button level="secondary" fullWidth={false}>
-            <div className="flex gap-1 items-center">
-              <SolarRefreshCircleLinear />
-              <p className="text-sm font-bold">Regenerar</p>
-            </div>
-          </Button>
+          {props.canRegenerate && (
+            <Button
+              level="secondary"
+              fullWidth={false}
+              clickHandler={() => props.handleRegeneratePrompt!(props.chatId!)}
+            >
+              <div className="flex gap-1 items-center">
+                <SolarRefreshCircleLinear />
+                <p className="text-sm font-bold">Regenerar</p>
+              </div>
+            </Button>
+          )}
         </div>
       </>
     );

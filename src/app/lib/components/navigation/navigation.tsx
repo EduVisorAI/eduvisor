@@ -152,9 +152,9 @@ export const Navigation = () => {
                     <IcBaselinePlus />
                     <p>Nuevo chat</p>
                   </button>
-                  <button className="rounded-full bg-black p-3 flex justify-center items-center">
+                  {/* <button className="rounded-full bg-black p-3 flex justify-center items-center">
                     <img src={"/search.png"} />
-                  </button>
+                  </button> */}
                 </div>
                 <div className="my-0 flex justify-between border-t border-b border-gray-200/50 py-4">
                   <p className="text-[#6A6969] font-bold text-[12px]">

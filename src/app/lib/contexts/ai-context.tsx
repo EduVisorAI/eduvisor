@@ -12,6 +12,7 @@ export const AIContext = React.createContext<{
   prompt: string;
   newConvo: (uuid: string, model: AIModel) => void;
   sendPrompt: (id: string, prompt: string, userId: string) => Promise<void>;
+  regeneratePrompt: (id: string, userId: string) => Promise<void>;
   configure: (temp: number, token: number, prompt: string) => void;
 }>({
   conversations: [],
@@ -20,6 +21,8 @@ export const AIContext = React.createContext<{
   prompt: "",
   newConvo: (_uuid: string, _model: AIModel) => {},
   sendPrompt: (_id: string, _prompt: string, _userId: string) =>
+    new Promise((_resolve, _reject) => {}),
+  regeneratePrompt: (_id: string, _userId: string) =>
     new Promise((_resolve, _reject) => {}),
   configure: (_temp: number, _token: number, _prompt: string) => {}
 });
@@ -75,6 +78,14 @@ export const AIContextProvider: React.FC<React.PropsWithChildren> = (props) => {
     summarizeConvo(id);
   };
 
+  const regeneratePrompt = async (id: string, userId: string) => {
+    const chatGptApi = new Controller();
+    await chatGptApi.regenerate(id, userId);
+    const conversations = chatGptApi.convos();
+    setConversations(conversations);
+    summarizeConvo(id);
+  };
+
   const summarizeConvo = async (id: string) => {
     const chatGptApi = new Controller();
     let conversations = chatGptApi.convos();
@@ -106,7 +117,8 @@ export const AIContextProvider: React.FC<React.PropsWithChildren> = (props) => {
         token: token,
         prompt: prompt,
         newConvo: newConvo,
-        sendPrompt: sendPrompt,
+				sendPrompt: sendPrompt,
+				regeneratePrompt: regeneratePrompt,
         configure: configure
       }}
     >
