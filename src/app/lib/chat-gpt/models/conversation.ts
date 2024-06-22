@@ -54,7 +54,7 @@ export class Conversation {
     if (this._title.trim().length > 0) {
       return this._title;
     } else {
-      return "Untitled Conversation";
+      return "Conversación sin título";
     }
   }
 

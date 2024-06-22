@@ -107,11 +107,11 @@ export default function Page() {
                       chatId={chatId}
                       model={conversation.model}
                       handleRegeneratePrompt={handleRegeneratePrompt}
-                      // canRegenerate={
-                      //   id === conversation.speeches.length - 1 &&
-                      //   speaker === "ai"
-                      // }
-                      canRegenerate={false}
+                      canRegenerate={
+                        id === conversation.speeches.length - 1 &&
+                        speaker === "ai"
+                      }
+                      // canRegenerate={false}
                       speech={speech}
                       animate={animate}
                     />

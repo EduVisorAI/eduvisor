@@ -81,39 +81,23 @@ export const AIContextProvider: React.FC<React.PropsWithChildren> = (props) => {
   const regeneratePrompt = async (id: string, userId: string) => {
     const chatGptApi = new Controller();
 
-    var lastSpeechAI: RenderedSpeech;
-    var lastSpeechHuman: RenderedSpeech;
-
     setConversations((prevConvos) => {
       const newConvos = [...prevConvos];
-      const convo = newConvos.find((c) => c.id === id)!;
-      const speeches = convo.speeches;
-      lastSpeechAI = speeches[speeches.length - 1];
-      lastSpeechHuman = speeches[speeches.length - 2];
-      const lastPrompt = lastSpeechHuman.content.answer;
-      convo.speeches = speeches.slice(0, speeches.length - 2);
-      convo.speeches.push({
-        speaker: "HUMAN",
-        content: {
-          answer: lastPrompt
-        }
-      });
+      newConvos.find((c) => c.id === id)!.speeches.pop();
       return newConvos;
     });
 
+    const lastPrompt = conversations
+      .find((c) => c.id === id)!
+      .speeches.slice(-1)[0].content.answer;
+
     try {
-      await chatGptApi.regenerate(id, userId);
+      await chatGptApi.regenerate(id, lastPrompt, userId);
       const conversations = chatGptApi.convos();
       setConversations(conversations);
       summarizeConvo(id);
     } catch (error) {
-      setConversations((prevConvos) => {
-        const newConvos = [...prevConvos];
-        const convo = newConvos.find((c) => c.id === id)!;
-        convo.speeches.push(lastSpeechHuman);
-        convo.speeches.push(lastSpeechAI);
-        return newConvos;
-      });
+      console.error(error);
     }
   };
 
@@ -123,7 +107,7 @@ export const AIContextProvider: React.FC<React.PropsWithChildren> = (props) => {
     const convo = conversations.find((c) => c.id === id);
     if (
       convo?.speeches.length === 2 ||
-      convo?.title === "Untitled Conversation" ||
+      convo?.title === "Conversación sin título" ||
       convo?.description === "This conversation hasn't been summarized."
     ) {
       await chatGptApi.summarize(id);
