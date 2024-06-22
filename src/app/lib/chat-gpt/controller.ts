@@ -34,23 +34,22 @@ export class Controller {
 
   async regenerate(convoId: string, userId: string) {
     const convos = this.readConversations();
-		const curConvo = convos.find((c) => c.id() === convoId) as Conversation;
-		const speeches = curConvo.speeches;
+    const curConvo = convos.find((c) => c.id() === convoId) as Conversation;
+    const speeches = curConvo.speeches;
 
-			const lastSpeechAI = speeches[speeches.length - 1];
-		const lastSpeechHuman = speeches[speeches.length - 2];
-		
-		
-			
+    const lastSpeechHuman = speeches[speeches.length - 2];
+    const lastPrompt = lastSpeechHuman.content.answer;
 
-    // const human = new Human();
+    const human = new Human();
     const ai = this.readAI();
-    // const speech = human.speak({ answer: prompt });
-    // human.add(speech, curConvo);
-    // ai.prompt = new Prompt(prompt);
+    const speech = human.speak({ answer: lastPrompt });
+    human.add(speech, curConvo);
+    ai.prompt = new Prompt(lastPrompt);
     const response = await ai.think(curConvo, userId);
-    // ai.add(response, curConvo);
-    // this.writeConversations(convos);
+    // eliminamos los ultimos 2 mensajes
+    curConvo.speeches = speeches.slice(0, speeches.length - 2);
+    ai.add(response, curConvo);
+    this.writeConversations(convos);
     return response;
   }
 

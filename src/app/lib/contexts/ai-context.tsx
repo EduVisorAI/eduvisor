@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { RenderedConversation } from "../chat-gpt/renderer";
+import { RenderedConversation, RenderedSpeech } from "../chat-gpt/renderer";
 import { Controller } from "../chat-gpt/controller";
 import { AIModel } from "../chat-gpt/models/conversation";
 
@@ -80,10 +80,41 @@ export const AIContextProvider: React.FC<React.PropsWithChildren> = (props) => {
 
   const regeneratePrompt = async (id: string, userId: string) => {
     const chatGptApi = new Controller();
-    await chatGptApi.regenerate(id, userId);
-    const conversations = chatGptApi.convos();
-    setConversations(conversations);
-    summarizeConvo(id);
+
+    var lastSpeechAI: RenderedSpeech;
+    var lastSpeechHuman: RenderedSpeech;
+
+    setConversations((prevConvos) => {
+      const newConvos = [...prevConvos];
+      const convo = newConvos.find((c) => c.id === id)!;
+      const speeches = convo.speeches;
+      lastSpeechAI = speeches[speeches.length - 1];
+      lastSpeechHuman = speeches[speeches.length - 2];
+      const lastPrompt = lastSpeechHuman.content.answer;
+      convo.speeches = speeches.slice(0, speeches.length - 2);
+      convo.speeches.push({
+        speaker: "HUMAN",
+        content: {
+          answer: lastPrompt
+        }
+      });
+      return newConvos;
+    });
+
+    try {
+      await chatGptApi.regenerate(id, userId);
+      const conversations = chatGptApi.convos();
+      setConversations(conversations);
+      summarizeConvo(id);
+    } catch (error) {
+      setConversations((prevConvos) => {
+        const newConvos = [...prevConvos];
+        const convo = newConvos.find((c) => c.id === id)!;
+        convo.speeches.push(lastSpeechHuman);
+        convo.speeches.push(lastSpeechAI);
+        return newConvos;
+      });
+    }
   };
 
   const summarizeConvo = async (id: string) => {
@@ -117,8 +148,8 @@ export const AIContextProvider: React.FC<React.PropsWithChildren> = (props) => {
         token: token,
         prompt: prompt,
         newConvo: newConvo,
-				sendPrompt: sendPrompt,
-				regeneratePrompt: regeneratePrompt,
+        sendPrompt: sendPrompt,
+        regeneratePrompt: regeneratePrompt,
         configure: configure
       }}
     >

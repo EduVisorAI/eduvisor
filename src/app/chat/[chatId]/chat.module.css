@@ -3,11 +3,11 @@
 }
 
 .secondary-heading {
-  @apply text-2xl tracking-wide md:text-3xl text-center font-semibold;
+  @apply text-2xl tracking-wide md:text-3xl text-center font-semibold mb-4;
 }
 
 .prompts-container {
-  @apply flex flex-col justify-center items-center md:items-stretch md:flex-row;
+  @apply flex flex-col justify-center items-center md:items-stretch md:flex-row gap-4;
 }
 
 .prompt-text {
