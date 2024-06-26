@@ -19,7 +19,7 @@ export const ChatInput: React.FC<{
   } = useSpeechRecognition();
 
   useEffect(() => {
-    setInput(transcript);
+    setInput((prev) => prev + transcript);
   }, [transcript]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -48,51 +48,56 @@ export const ChatInput: React.FC<{
       transition={{ duration: 0.5 }}
       onSubmit={handleSubmit}
     >
-      <textarea
-        placeholder={`¿Que estás pensando?...`}
-        value={input}
-        rows={1}
-        onChange={handleInputChange}
-        onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            setInput(""); // clear the input
-            props.inputSubmitHandler(input);
-          }
-        }}
-        style={{
-          resize: "none",
-          outlineColor: "#999999",
-          outlineWidth: "2px"
-        }}
+      <div
         className={
           props.submitting ? styles["disabled-input"] : styles["input"]
         }
-        disabled={props.submitting}
-      />
-      <div className="absolute disabled:opacity-10 right-4">
-        <div className="flex gap-2">
-          <Button
-            clickHandler={toggleListening}
-            level="primary"
-            fullWidth={false}
-            rounded={true}
-            submitting={props.submitting}
-          >
-            <HiOutlineMicrophone
-              className={`w-5 h-5 ${
-                isListening ? "text-red-500" : "text-current"
-              }`}
-            />
-          </Button>
-          <Button
-            level="primary"
-            fullWidth={false}
-            rounded={true}
-            submitting={props.submitting}
-          >
-            <img src="/send.png" className={`w-5 h-5`} />
-          </Button>
+        style={{
+          outlineColor: "#999999",
+          outlineWidth: "2px"
+        }}
+      >
+        <textarea
+          placeholder={`¿Que estás pensando?...`}
+          value={input}
+          rows={1}
+          onChange={handleInputChange}
+          onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              setInput(""); // clear the input
+              props.inputSubmitHandler(input);
+            }
+          }}
+          disabled={props.submitting}
+          className="w-full h-full p-2 bg-transparent border-none focus:outline-none"
+          style={{ resize: "none" }}
+        />
+        <div className="disabled:opacity-10 right-4 [flex:none]">
+          <div className="flex gap-2">
+            <Button
+              clickHandler={toggleListening}
+              level="primary"
+              fullWidth={false}
+              rounded={true}
+              submitting={props.submitting}
+              preventDefault={true}
+            >
+              <HiOutlineMicrophone
+                className={`w-5 h-5 ${
+                  isListening ? "text-red-500" : "text-current"
+                }`}
+              />
+            </Button>
+            <Button
+              level="primary"
+              fullWidth={false}
+              rounded={true}
+              submitting={props.submitting}
+            >
+              <img src="/send.png" className={`w-5 h-5`} />
+            </Button>
+          </div>
         </div>
       </div>
     </motion.form>

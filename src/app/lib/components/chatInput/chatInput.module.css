@@ -1,9 +1,9 @@
 .input {
-  @apply rounded-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] m-0 w-full resize-none border-0 bg-transparent focus:outline-none focus:shadow-none py-[10px] pr-10 md:py-3.5 md:pr-12 pl-4 md:pl-6;
+  @apply rounded-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] m-0 w-full resize-none border-0 bg-transparent focus:outline-none focus:shadow-none pt-1 pr-3 pl-4 md:pl-6 flex items-center;
 }
 
 .disabled-input {
-  @apply rounded-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] m-0 w-full resize-none bg-transparent py-[10px] pr-10 md:py-3.5 md:pr-12 pl-4 md:pl-6;
+  @apply rounded-full shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] m-0 w-full resize-none bg-transparent pt-1 pr-3 pl-4 md:pl-6 flex items-center;
 }
 
 .container {
