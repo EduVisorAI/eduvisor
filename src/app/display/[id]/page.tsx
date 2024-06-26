@@ -9,11 +9,28 @@ import { ArtContent, ChemicalContent } from "@/app/lib/chat-gpt/renderer";
 import { AIModel } from "@/app/lib/chat-gpt/models/conversation";
 import Head from "next/head";
 import { MarkdownRenderer } from "@/app/lib/components/markdownRenderer/markdownRenderer";
+import localFont from "next/font/local";
 
 interface Dimensions {
   width: number;
   height: number;
 }
+
+const zisouSlabs = localFont({
+  src: [
+    {
+      path: "../../../../public/fonts/Zizou Slab-Regular 1.otf",
+      weight: "400",
+      style: "normal"
+    },
+    {
+      path: "../../../../public/fonts/Zizou Slab-Bold 1.otf",
+      weight: "900",
+      style: "normal"
+    }
+  ],
+  display: "swap"
+});
 
 export default function Page() {
   const imageContainerRef = useRef<any>(null);
@@ -92,7 +109,7 @@ export default function Page() {
 
     return (
       <div
-        className={`${
+        className={` ${
           chemicalContent.answer !== null
             ? "flex flex-col-reverse xl:flex-row"
             : "h-full"
@@ -107,18 +124,9 @@ export default function Page() {
             <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-start mb-3 xl:mb-7 flex-1">
               {chemicalContent.component}
             </h1>
-            <p className="text-2xl md:text-4xl lg:text-5xl lg:[line-height:1.15] break-words">
+            <p className="text-2xl md:text-4xl lg:text-5xl lg:[line-height:1.15] font-normal break-words">
               <MarkdownRenderer markdown={chemicalContent.answer} />
             </p>
-            {/* {chemicalContent.answer.split("\n").map((line, i) => (
-              <p
-                key={i}
-                className=" text-2xl md:text-4xl lg:text-5xl lg:[line-height:1.15] break-words"
-              >
-                {line}
-                <br />
-              </p>
-            ))} */}
           </div>
         </div>
         <div className="xl:hidden bg-white/20 w-full h-[1px]" />
@@ -198,15 +206,9 @@ export default function Page() {
             <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-start mb-3 xl:mb-7 flex-1">
               {artContent.title}
             </h1>
-            {artContent.answer.split("\n").map((line, i) => (
-              <p
-                key={i}
-                className=" text-2xl md:text-4xl lg:text-5xl lg:[line-height:1.15] break-words"
-              >
-                {line}
-                <br />
-              </p>
-            ))}
+            <p className="text-2xl md:text-4xl lg:text-5xl lg:[line-height:1.15] font-medium break-words">
+              <MarkdownRenderer markdown={artContent.answer} />
+            </p>
           </div>
         </div>
         <div className="xl:hidden bg-white/20 w-full h-[1px]" />
@@ -255,10 +257,10 @@ export default function Page() {
       </Head>
       <div
         id="display-container"
-        className="w-full xl:h-full relative overflow-hidden"
+        className={`w-full xl:h-full relative overflow-hidden ${zisouSlabs.className}`}
       >
         <div className="bg-[#E42322] w-full h-[60px] relative z-20">
-          <p className="text-white text-xl font-bold pl-4 py-4">Room {id}</p>
+          <p className="text-white text-xl font-normal pl-4 py-4">Room {id}</p>
         </div>
         {showContent()}
       </div>
