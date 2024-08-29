@@ -24,9 +24,11 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
-      - name: Compress files
+      - name: Prepare files for deployment
         run: |
-          Compress-Archive -Path * -CompressionLevel Optimal -DestinationPath node-app.zip -Force -Exclude node_modules, .git, tests
+          New-Item -Path temp-deploy -ItemType Directory
+          Copy-Item -Path * -Destination temp-deploy -Recurse -Exclude node_modules, .git, tests
+          Compress-Archive -Path temp-deploy\* -CompressionLevel Optimal -DestinationPath node-app.zip -Force
         shell: pwsh
 
       - name: Upload artifact for deployment job
