@@ -27,7 +27,7 @@ jobs:
       - name: Prepare files for deployment
         run: |
           New-Item -Path temp-deploy -ItemType Directory
-          Copy-Item -Path * -Destination temp-deploy -Recurse -Exclude node_modules, .git, tests
+          Get-ChildItem -Path . -Exclude temp-deploy, node_modules, .git | Copy-Item -Destination temp-deploy -Recurse
           Compress-Archive -Path temp-deploy\* -CompressionLevel Optimal -DestinationPath node-app.zip -Force
         shell: pwsh
 
