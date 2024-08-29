@@ -27,11 +27,15 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
+      - name: Compress files
+        run: |
+          zip -r node-app.zip . -x "**/node_modules/**"  # Excluir node_modules al comprimir
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4.3.6
         with:
           name: node-app
-          path: .
+          path: node-app.zip # Subir el archivo comprimido
 
   deploy:
     runs-on: ubuntu-latest
@@ -48,6 +52,9 @@ jobs:
         with:
           name: node-app
 
+      - name: Extract artifact
+        run: unzip node-app.zip
+
       - name: Login to Azure
         uses: azure/login@v2.1.1
         with:
@@ -60,5 +67,5 @@ jobs:
         id: deploy-to-webapp
         with:
           app-name: "EduvisorTP2"
-          slot-name: "Production"
+          slot-name: "production"
           package: .
