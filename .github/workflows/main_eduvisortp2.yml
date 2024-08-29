@@ -26,7 +26,7 @@ jobs:
 
       - name: Compress files
         run: |
-          Compress-Archive -Path * -CompressionLevel Optimal -DestinationPath node-app.zip -Force
+          Compress-Archive -Path * -CompressionLevel Optimal -DestinationPath node-app.zip -Force -Exclude node_modules, .git, tests
         shell: pwsh
 
       - name: Upload artifact for deployment job
