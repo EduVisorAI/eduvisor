@@ -6,8 +6,8 @@ import { Token } from "./token";
 // import { Configuration, OpenAIApi } from "openai";
 
 const urls = {
-  CHEMICAL: "https://eduvisor-backend.azurewebsites.net/api/chemical",
-  ART: "https://eduvisor-backend.azurewebsites.net/api/art"
+  CHEMICAL: "https://eduvisor-backend-tp2.azurewebsites.net/api/chemical",
+  ART: "https://eduvisor-backend-tp2.azurewebsites.net/api/art"
 };
 
 export class AI extends Speaker {
