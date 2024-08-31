@@ -14,12 +14,33 @@ app.prepare().then(() => {
   const io = new Server(httpServer);
 
   io.on("connection", (socket) => {
+    socket.on("join-room", (roomId) => {
+      socket.join(roomId);
+    });
+
     socket.on("send-to-display", (content, roomId) => {
       io.to(roomId).emit("content-change", content);
     });
 
-    socket.on("join-room", (roomId) => {
-      socket.join(roomId);
+    socket.on("update-display", (content, roomId) => {
+      const { model } = content;
+      const knowledgeAreas = {
+        QUIMICA: (content, roomId) => {
+          const { viewMode } = content;
+          io.to(roomId).emit("content-update", viewMode);
+        },
+        ARTE: (content, roomId) => {
+          const { imageIndex } = content;
+          io.to(roomId).emit("content-update", imageIndex);
+        }
+        // Agrega más áreas de conocimiento aquí si es necesario
+      };
+
+      if (knowledgeAreas[model]) {
+        knowledgeAreas[model](content, roomId);
+      } else {
+        console.error(`Invalid model value: ${model}`);
+      }
     });
   });
 
@@ -32,9 +53,12 @@ app.prepare().then(() => {
       console.log(`> Ready on http://${hostname}:${port}`);
     });
 
-    if (process.env.NODE_ENV === 'production') {
-      console.log('La aplicación está corriendo en un entorno de producción.');
-    } else {
-      console.log('La aplicación NO está corriendo en un entorno de producción, está corriendo en ' + process.env.NODE_ENV);
-    }
+  if (process.env.NODE_ENV === "production") {
+    console.log("La aplicación está corriendo en un entorno de producción.");
+  } else {
+    console.log(
+      "La aplicación NO está corriendo en un entorno de producción, está corriendo en " +
+        process.env.NODE_ENV
+    );
+  }
 });

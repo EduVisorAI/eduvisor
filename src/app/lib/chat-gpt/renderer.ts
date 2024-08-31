@@ -17,6 +17,7 @@ export interface ArtContent {
   answer: string;
   title?: string;
   imageUrl?: string[];
+  imageIndex?: number;
 }
 
 export type RenderedSpeech = {

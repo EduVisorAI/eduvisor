@@ -1,22 +1,11 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable react/display-name */
-/* eslint-disable @next/next/no-img-element */
-import React, { Fragment } from "react";
+import React from "react";
 import styles from "./speechBubble.module.css";
 import Loader from "../../../../../public/loading.gif";
 import { motion } from "framer-motion";
-import { Button } from "../button/button";
-import { MdiShowOutline } from "../../assets/show-outline";
-import { SolarRefreshCircleLinear } from "../../assets/refresh-circle";
-import { socket } from "../../../socket";
 import { AIModel } from "../../chat-gpt/models/conversation";
-import {
-  ArtContent,
-  ChemicalContent,
-  RenderedSpeech
-} from "../../chat-gpt/renderer";
-import SimpleImageSlider from "react-simple-image-slider";
-import { MarkdownRenderer } from "../markdownRenderer/markdownRenderer";
+import { RenderedSpeech } from "../../chat-gpt/renderer";
+import { ChemicalAnswer } from "../knowledgeAreas/chemical/ChemicalAnswer";
+import { ArtAnswer } from "../knowledgeAreas/art/ArtAnswer";
 
 export const SpeechBubble: React.FC<{
   chatId?: string;
@@ -31,8 +20,19 @@ export const SpeechBubble: React.FC<{
 }> = (props) => {
   let speechBubbleClass: string;
   let containerClass: string;
+  const {
+    chatId,
+    model,
+    speaker,
+    speech,
+    handleRegeneratePrompt,
+    canRegenerate,
+    loading,
+    animate,
+    delay
+  } = props;
 
-  if (props.speaker === "ai") {
+  if (speaker === "ai") {
     speechBubbleClass = "ai";
     containerClass = "ai-container";
   } else {
@@ -41,10 +41,10 @@ export const SpeechBubble: React.FC<{
   }
 
   const UserBubble = () => {
-    const content = props.loading ? (
+    const content = loading ? (
       <img src={Loader.src} width={40} alt="Loading" />
     ) : (
-      <p className="font-bold">{props.speech.content.answer}</p>
+      <p className="font-bold">{speech.content.answer}</p>
     );
 
     return (
@@ -55,144 +55,25 @@ export const SpeechBubble: React.FC<{
     );
   };
 
-  const ChemicalContentComponent = ({ speech }: { speech: RenderedSpeech }) => {
-    const content = speech.content as ChemicalContent;
-    const socketContent = {
-      answer: content.answer,
-      component: content.component,
-      cid: content.cid
-    };
-
-    return (
-      <>
-        <p className="font-medium text-[18px] mb-2">
-          {content.answer && MarkdownRenderer({ markdown: content.answer })}
-        </p>
-
-        {content.cid && (
-          <div className="flex flex-col lg:flex-row gap-4 my-2">
-            <iframe
-              style={{ width: "300px", height: "300px" }}
-              src={`https://embed.molview.org/v1/?mode=balls&cid=${content.cid}`}
-            ></iframe>
-            <div className="w-[300px] h-[299px]">
-              <img
-                src={`https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${content.cid}/PNG?image_size=300x299`}
-                alt="2D Image"
-                style={{ border: "1px solid #000" }} // Agrega esta línea
-              />
-            </div>
-          </div>
-        )}
-        <div className="flex gap-3 mt-2">
-          <Button
-            level="secondary"
-            fullWidth={false}
-            clickHandler={() => {
-              socket.emit(
-                "send-to-display",
-                {
-                  model: props.model,
-                  content: socketContent
-                },
-                props.chatId
-              );
-            }}
-          >
-            <div className="flex gap-1 items-center">
-              <MdiShowOutline />
-              <p className="text-sm font-bold">Mostrar en display</p>
-            </div>
-          </Button>
-          {props.canRegenerate && (
-            <Button
-              level="secondary"
-              fullWidth={false}
-              clickHandler={() => props.handleRegeneratePrompt!(props.chatId!)}
-            >
-              <div className="flex gap-1 items-center">
-                <SolarRefreshCircleLinear />
-                <p className="text-sm font-bold">Regenerar</p>
-              </div>
-            </Button>
-          )}
-        </div>
-      </>
-    );
-  };
-
-  const ArtContentComponent = ({ speech }: { speech: RenderedSpeech }) => {
-    const content = speech.content as ArtContent;
-    const socketContent = {
-      title: content.title,
-      answer: content.answer,
-      imageUrl: content.imageUrl
-    };
-
-    return (
-      <>
-        <p className="font-medium text-[18px] mb-2">
-          {content.answer && MarkdownRenderer({ markdown: content.answer })}
-        </p>
-
-        {content.imageUrl && Array.isArray(content.imageUrl) && (
-          <div className="relative">
-            <SimpleImageSlider
-              width={300}
-              height={300}
-              images={content.imageUrl}
-              showBullets={true}
-              showNavs={true}
-            />
-          </div>
-        )}
-
-        <div className="flex gap-3 mt-2">
-          <Button
-            level="secondary"
-            fullWidth={false}
-            clickHandler={() => {
-              socket.emit(
-                "send-to-display",
-                {
-                  model: props.model,
-                  content: socketContent
-                },
-                props.chatId
-              );
-            }}
-          >
-            <div className="flex gap-1 items-center">
-              <MdiShowOutline />
-              <p className="text-sm font-bold">Mostrar en display</p>
-            </div>
-          </Button>
-          {props.canRegenerate && (
-            <Button
-              level="secondary"
-              fullWidth={false}
-              clickHandler={() => props.handleRegeneratePrompt!(props.chatId!)}
-            >
-              <div className="flex gap-1 items-center">
-                <SolarRefreshCircleLinear />
-                <p className="text-sm font-bold">Regenerar</p>
-              </div>
-            </Button>
-          )}
-        </div>
-      </>
-    );
-  };
-
   const AIBubble = () => {
-    const content = props.loading ? (
+    const content = loading ? (
       <img src={Loader.src} width={40} alt="Loading" />
     ) : (
       <>
-        {props.model === AIModel.CHEMICAL ? (
-          <ChemicalContentComponent speech={props.speech} />
+        {model === AIModel.CHEMICAL ? (
+          <ChemicalAnswer
+            speech={speech}
+            chatId={chatId!}
+            canRegenerate={canRegenerate!}
+            handleRegeneratePrompt={handleRegeneratePrompt!}
+          />
         ) : (
-          <ArtContentComponent speech={props.speech} />
+          <ArtAnswer
+            speech={speech}
+            chatId={chatId!}
+            canRegenerate={canRegenerate!}
+            handleRegeneratePrompt={handleRegeneratePrompt!}
+          />
         )}
       </>
     );
@@ -208,21 +89,21 @@ export const SpeechBubble: React.FC<{
     );
   };
 
-  if (props.animate) {
+  if (animate) {
     return (
       <motion.div
         className={styles[containerClass]}
         animate={{ y: 0, opacity: 1 }}
         initial={{ y: 60, opacity: 0 }}
-        transition={{ duration: 0.5, delay: props.delay ? props.delay : 0 }}
+        transition={{ duration: 0.5, delay: delay ? delay : 0 }}
       >
-        {props.speaker === "user" ? <UserBubble /> : <AIBubble />}
+        {speaker === "user" ? <UserBubble /> : <AIBubble />}
       </motion.div>
     );
   } else {
     return (
       <div className={styles[containerClass]}>
-        {props.speaker === "user" ? <UserBubble /> : <AIBubble />}
+        {speaker === "user" ? <UserBubble /> : <AIBubble />}
       </div>
     );
   }
