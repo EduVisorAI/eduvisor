@@ -7,6 +7,7 @@ type ButtonProps = React.PropsWithChildren<{
   clickHandler?: () => void;
   submitting?: boolean;
   preventDefault?: boolean; // Nueva propiedad para controlar el comportamiento de preventDefault
+  additionalClasses?: string; // Nueva propiedad para añadir clases adicionales
 }>;
 
 export const Button: React.FC<ButtonProps> = ({
@@ -16,22 +17,19 @@ export const Button: React.FC<ButtonProps> = ({
   clickHandler,
   submitting = false,
   children,
-  preventDefault = false // Por defecto, no previene el envío del formulario
+  preventDefault = false, // Por defecto, no previene el envío del formulario
+  additionalClasses = "" // Default to an empty string
 }) => {
-  let btnStyle;
-  if (level === "primary") {
-    if (submitting) {
-      btnStyle = styles["primary-disabled"];
-    } else {
-      btnStyle = styles["primary"];
-    }
-  } else {
-    if (submitting) {
-      btnStyle = styles["secondary-disabled"];
-    } else {
-      btnStyle = styles["secondary"];
-    }
-  }
+  const btnStyle =
+    styles[
+      level === "primary"
+        ? submitting
+          ? "primary-disabled"
+          : "primary"
+        : submitting
+        ? "secondary-disabled"
+        : "secondary"
+    ];
 
   // Modificado para manejar preventDefault según la propiedad
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,13 +42,19 @@ export const Button: React.FC<ButtonProps> = ({
     }
   };
 
+  const classNames = [
+    styles["btn"],
+    btnStyle,
+    additionalClasses,
+    fullWidth ? styles["full-width"] : "",
+    rounded ? styles["rounded"] : ""
+  ].join(" ");
+
   return (
     <button
       onClick={handleClick} // Usar handleClick modificado
       onKeyDown={clickHandler}
-      className={`${styles["btn"]} ${btnStyle} ${
-        fullWidth ? styles["full-width"] : ""
-      } ${rounded ? styles["rounded"] : ""} `}
+      className={classNames} // Usar spread para los estilos
       disabled={submitting ? submitting : false}
     >
       {children}

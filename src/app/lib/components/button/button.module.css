@@ -11,7 +11,7 @@
 }
 
 .secondary {
-  @apply border-[1px] border-[#5661F6] text-[#5661F6] hover:border-[#4C53D7] hover:text-[#4C53D7] bg-white/50 font-medium;
+  @apply bg-white/50 border-[1px] border-[#5661F6] text-[#5661F6] font-medium;
 }
 
 .full-width {
@@ -28,4 +28,10 @@
 
 .secondary-disabled {
   @apply border-2 border-[#5661F6] text-[#5661F6] opacity-80 cursor-auto transition-none hover:scale-100;
+}
+
+.active {
+  /* active button styles, e.g., different background color */
+  background-color: #007bff;
+  color: white;
 }
