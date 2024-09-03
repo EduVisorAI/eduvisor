@@ -6,8 +6,7 @@ type ButtonProps = React.PropsWithChildren<{
   rounded?: boolean;
   clickHandler?: () => void;
   submitting?: boolean;
-  preventDefault?: boolean; // Nueva propiedad para controlar el comportamiento de preventDefault
-  additionalClasses?: string; // Nueva propiedad para añadir clases adicionales
+  preventDefault?: boolean;
 }>;
 
 export const Button: React.FC<ButtonProps> = ({
@@ -17,8 +16,7 @@ export const Button: React.FC<ButtonProps> = ({
   clickHandler,
   submitting = false,
   children,
-  preventDefault = false, // Por defecto, no previene el envío del formulario
-  additionalClasses = "" // Default to an empty string
+  preventDefault = false
 }) => {
   const btnStyle =
     styles[
@@ -31,7 +29,6 @@ export const Button: React.FC<ButtonProps> = ({
         : "secondary"
     ];
 
-  // Modificado para manejar preventDefault según la propiedad
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (preventDefault) {
       e.preventDefault();
@@ -45,16 +42,15 @@ export const Button: React.FC<ButtonProps> = ({
   const classNames = [
     styles["btn"],
     btnStyle,
-    additionalClasses,
     fullWidth ? styles["full-width"] : "",
     rounded ? styles["rounded"] : ""
   ].join(" ");
 
   return (
     <button
-      onClick={handleClick} // Usar handleClick modificado
+      onClick={handleClick}
       onKeyDown={clickHandler}
-      className={classNames} // Usar spread para los estilos
+      className={classNames}
       disabled={submitting ? submitting : false}
     >
       {children}

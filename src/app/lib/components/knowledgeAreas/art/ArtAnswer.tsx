@@ -1,5 +1,5 @@
 import { ArtContent, RenderedSpeech } from "@/app/lib/chat-gpt/renderer";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { MarkdownRenderer } from "../../markdownRenderer/markdownRenderer";
 import SimpleImageSlider from "react-simple-image-slider";
 import { socket } from "@/app/socket";
@@ -7,50 +7,76 @@ import { Button } from "../../button/button";
 import { MdiShowOutline } from "@/app/lib/assets/show-outline";
 import { SolarRefreshCircleLinear } from "@/app/lib/assets/refresh-circle";
 
-export const ArtAnswer = ({
-  speech,
-  chatId,
-  canRegenerate,
-  handleRegeneratePrompt
-}: {
+interface ArtAnswerProps {
   speech: RenderedSpeech;
   chatId: string;
   canRegenerate: boolean;
   handleRegeneratePrompt: (chatId: string) => void;
+}
+
+export const ArtAnswer: React.FC<ArtAnswerProps> = ({
+  speech,
+  chatId,
+  canRegenerate,
+  handleRegeneratePrompt
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const content = speech.content as ArtContent;
-  const socketContent = {
-    title: content.title,
-    answer: content.answer,
-    imageUrl: content.imageUrl
-  };
+  const { title, answer, imageUrl } = content;
 
-  const handleNavClick = (toRight: boolean) => {
-    setCurrentIndex((prevIndex) => (toRight ? prevIndex + 1 : prevIndex - 1));
+  const socketContent = useMemo(
+    () => ({
+      title,
+      answer,
+      imageUrl
+    }),
+    [title, answer, imageUrl]
+  );
 
+  const handleNavClick = useCallback(
+    (toRight: boolean) => {
+      if (!imageUrl) return;
+      const newIndex =
+        (currentIndex + (toRight ? 1 : -1) + imageUrl.length) % imageUrl.length;
+
+      socket.emit(
+        "update-display",
+        { model: "ARTE", imageIndex: newIndex },
+        chatId
+      );
+      setCurrentIndex(newIndex);
+    },
+    [currentIndex, imageUrl, chatId]
+  );
+
+  const handleShowOnDisplay = useCallback(() => {
     socket.emit(
-      "update-display",
+      "send-to-display",
       {
         model: "ARTE",
-        imageIndex: toRight ? currentIndex + 1 : currentIndex - 1
+        content: socketContent,
+        imageIndex: currentIndex
       },
       chatId
     );
-  };
+  }, [socketContent, currentIndex, chatId]);
+
+  const handleRegenerate = useCallback(() => {
+    handleRegeneratePrompt(chatId);
+  }, [handleRegeneratePrompt, chatId]);
 
   return (
     <>
       <p className="font-medium text-[18px] mb-2">
-        {content.answer && MarkdownRenderer({ markdown: content.answer })}
+        {answer && <MarkdownRenderer markdown={answer} />}
       </p>
 
-      {content.imageUrl && Array.isArray(content.imageUrl) && (
+      {imageUrl && Array.isArray(imageUrl) && (
         <div className="relative">
           <SimpleImageSlider
             width={300}
             height={300}
-            images={content.imageUrl}
+            images={imageUrl}
             showBullets={true}
             showNavs={true}
             onClickNav={handleNavClick}
@@ -62,17 +88,7 @@ export const ArtAnswer = ({
         <Button
           level="secondary"
           fullWidth={false}
-          clickHandler={() => {
-            socket.emit(
-              "send-to-display",
-              {
-                model: "ARTE",
-                content: socketContent,
-                imageIndex: currentIndex
-              },
-              chatId
-            );
-          }}
+          clickHandler={handleShowOnDisplay}
         >
           <div className="flex gap-1 items-center">
             <MdiShowOutline />
@@ -83,7 +99,7 @@ export const ArtAnswer = ({
           <Button
             level="secondary"
             fullWidth={false}
-            clickHandler={() => handleRegeneratePrompt!(chatId!)}
+            clickHandler={handleRegenerate}
           >
             <div className="flex gap-1 items-center">
               <SolarRefreshCircleLinear />

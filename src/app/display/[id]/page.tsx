@@ -71,7 +71,11 @@ export default function Page() {
 
     if (!data?.content) return null;
 
-    const { answer = "", component = "", cid } = data.content as ChemicalContent;
+    const {
+      answer = "",
+      component = "",
+      cid
+    } = data.content as ChemicalContent;
 
     return (
       <div className="bg-[#252525] h-full flex flex-col-reverse xl:flex-row">
@@ -160,14 +164,23 @@ export default function Page() {
 
     if (!data?.content) return null;
 
-    const { title = "", answer = "", imageUrl = [] } = data.content as ArtContent;
+    const {
+      title = "",
+      answer = "",
+      imageUrl = []
+    } = data.content as ArtContent;
 
     const handleNextImage = () => {
-      setCurrentImageIndex((prevIndex: number) => (prevIndex + 1) % imageUrl.length);
+      setCurrentImageIndex(
+        (prevIndex: number) => (prevIndex + 1) % imageUrl.length
+      );
     };
 
     const handlePreviousImage = () => {
-      setCurrentImageIndex((prevIndex: number) => (prevIndex - 1 + imageUrl.length) % imageUrl.length);
+      setCurrentImageIndex(
+        (prevIndex: number) =>
+          (prevIndex - 1 + imageUrl.length) % imageUrl.length
+      );
     };
 
     return (
@@ -216,7 +229,7 @@ export default function Page() {
                 className="w-full h-full object-contain"
                 onError={({ currentTarget }: any) => {
                   currentTarget.onerror = null; // prevents looping
-                  currentTarget.src = "../../../../public/broken_image.jpg";
+                  currentTarget.src = "./broken_image.jpg";
                   currentTarget.style.width = dimensions.width + "px";
                   currentTarget.style.height = dimensions.height + "px";
                 }}
