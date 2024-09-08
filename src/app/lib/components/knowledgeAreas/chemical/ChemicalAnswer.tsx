@@ -1,5 +1,5 @@
 import { ChemicalContent, RenderedSpeech } from "@/app/lib/chat-gpt/renderer";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { MarkdownRenderer } from "../../markdownRenderer/markdownRenderer";
 import { Button } from "../../button/button";
 import { socket } from "@/app/socket";
@@ -24,6 +24,8 @@ export const ChemicalAnswer = ({
     component: content.component,
     cid: content.cid
   };
+
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const handleViewModeChange = (mode: "2D" | "3D") => {
     if (viewMode !== mode) {
@@ -51,7 +53,7 @@ export const ChemicalAnswer = ({
       </p>
 
       {content.cid && (
-        <div className="flex flex-col lg:flex-row gap-4 my-2">
+        <div className="flex flex-col gap-4 my-2">
           <div className="flex justify-start gap-2">
             <Button
               fullWidth={false}
@@ -72,8 +74,10 @@ export const ChemicalAnswer = ({
 
           {viewMode === "3D" ? (
             <iframe
+              ref={iframeRef}
               style={{ width: "300px", height: "300px" }}
               src={`https://embed.molview.org/v1/?mode=balls&cid=${content.cid}`}
+              sandbox="allow-scripts allow-same-origin allow-popups"
             ></iframe>
           ) : (
             <div className="w-[300px] h-[299px]">
