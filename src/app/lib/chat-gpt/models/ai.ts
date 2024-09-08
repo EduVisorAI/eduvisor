@@ -6,8 +6,8 @@ import { Token } from "./token";
 // import { Configuration, OpenAIApi } from "openai";
 
 const urls = {
-  CHEMICAL: `http://localhost:8080/api/chemical`,
-  ART: `http://localhost:8080/api/art`
+  CHEMICAL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/chemical`,
+  ART: `${process.env.NEXT_PUBLIC_BACKEND_URL}/art`
 };
 
 export class AI extends Speaker {
