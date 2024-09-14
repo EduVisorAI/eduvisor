@@ -6,8 +6,8 @@ import { Token } from "./token";
 // import { Configuration, OpenAIApi } from "openai";
 
 const urls = {
-  CHEMICAL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/chemical`,
-  ART: `${process.env.NEXT_PUBLIC_BACKEND_URL}/art`
+  CHEMICAL: `https://eduvisor-backend-tp2.azurewebsites.net/api/chemical`,
+  ART: `https://eduvisor-backend-tp2.azurewebsites.net/api/art`,
 };
 
 export class AI extends Speaker {
@@ -64,7 +64,7 @@ export class AI extends Speaker {
     // });
     conversation.summarize({
       title: conversation.speeches[0].content.answer,
-      description: conversation.speeches[0].content.answer
+      description: conversation.speeches[0].content.answer,
     });
   }
 
@@ -81,14 +81,14 @@ export class AI extends Speaker {
       const raw = JSON.stringify({
         message: prompt.content,
         userId: userId,
-        chatId: chatId
+        chatId: chatId,
       });
 
       const res = await fetch(url, {
         method: "POST",
         headers: myHeaders,
         body: raw,
-        redirect: "follow"
+        redirect: "follow",
       });
 
       const json = await res.json();
