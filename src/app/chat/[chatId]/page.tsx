@@ -76,13 +76,7 @@ export default function Page() {
             <div className={styles["chat-container"]}>
               {chatId && (
                 <div className="hidden  top-0 z-50 md:flex justify-end gap-2">
-                  <Button
-                    level="primary"
-                    fullWidth={false}
-                    clickHandler={() => {
-                      window.open(`/display/${chatId}`, "_blank");
-                    }}
-                  >
+                  <Button level="primary" fullWidth={false}>
                     Room {chatId}
                   </Button>
                   {conversation.model !== undefined && (
