@@ -6,7 +6,8 @@ import { Controller } from "../chat-gpt/controller";
 import { AIModel } from "../chat-gpt/models/conversation";
 
 export const AIContext = React.createContext<{
-  conversations: RenderedConversation[];
+	conversations: RenderedConversation[];
+	setConversations: React.Dispatch<React.SetStateAction<RenderedConversation[]>>;
   temperature: number;
   token: number;
   prompt: string;
@@ -15,7 +16,8 @@ export const AIContext = React.createContext<{
   regeneratePrompt: (id: string, userId: string) => Promise<void>;
   configure: (temp: number, token: number, prompt: string) => void;
 }>({
-  conversations: [],
+	conversations: [],
+	setConversations: () => {},
   temperature: 0,
   token: 2048,
   prompt: "",
@@ -127,7 +129,8 @@ export const AIContextProvider: React.FC<React.PropsWithChildren> = (props) => {
   return (
     <AIContext.Provider
       value={{
-        conversations: conversations,
+				conversations: conversations,
+				setConversations: setConversations,
         temperature: temperature,
         token: token,
         prompt: prompt,

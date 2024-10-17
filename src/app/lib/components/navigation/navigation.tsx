@@ -22,7 +22,7 @@ export const Navigation = () => {
     RenderedConversation | undefined
   >();
   const { chatId } = useParams<{ chatId: string }>();
-  const { conversations } = useContext(AIContext);
+  const { conversations, setConversations } = useContext(AIContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -174,7 +174,23 @@ export const Navigation = () => {
               <div className="flex flex-col flex-1 overflow-y-auto h-full ml-1 mt-2">
                 {conversations.map((convo, index) => (
                   <Link key={index} href={`/chat/${convo.id}`}>
-                    <ChatItem convo={convo} isActive={chatId === convo.id} />
+                    <ChatItem
+                      convo={convo}
+                      isActive={chatId === convo.id}
+                      onDelete={(id) => {
+                        const conversations = JSON.parse(
+                          localStorage.getItem("conversations") || "[]"
+                        );
+                        const updatedConversations = conversations.filter(
+                          (convo: { id: string }) => convo.id !== id
+                        );
+                        localStorage.setItem(
+                          "conversations",
+                          JSON.stringify(updatedConversations)
+                        );
+                        setConversations(updatedConversations);
+                      }}
+                    />
                   </Link>
                 ))}
               </div>

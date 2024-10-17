@@ -13,3 +13,11 @@
 .description {
   @apply text-xs mt-1;
 }
+
+.delete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff0000; /* Red color for delete icon */
+  display: flex;
+}

@@ -1,8 +1,9 @@
 import styles from "./chatItem.module.css";
 import { RenderedConversation } from "../../chat-gpt/renderer";
+import { FaTrash } from "react-icons/fa"; // Importing the delete icon
 
 export const ChatItem: React.FC<
-  React.PropsWithChildren<{ convo: RenderedConversation; isActive: boolean }>
+  React.PropsWithChildren<{ convo: RenderedConversation; isActive: boolean, onDelete: (id: string) => void }>
 > = (props) => {
   const format = (text: string, length: number) => {
     const shouldBeTruncated = text.length >= length;
@@ -22,7 +23,19 @@ export const ChatItem: React.FC<
           src={`/message${props.isActive ? "_active" : ""}.png`}
           className={`object-contain ${props.isActive ? "#5661F6" : ""} `}
         />
-        <h4 className={styles["title"]}>{format(props.convo.title, 23)}</h4>
+        <h4 className={`${styles["title"]} mr-2`}>
+          {format(props.convo.title, 20)}
+        </h4>
+        <button
+          className={styles["delete-button"]}
+          onClick={() => {
+						// Update the UI by triggering a state change
+						props.onDelete(props.convo.id);
+            // Optionally, you can add additional logic here, such as updating the state or notifying the user
+          }}
+        >
+          <FaTrash />
+        </button>
       </div>
     </div>
   );
