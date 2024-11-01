@@ -12,6 +12,14 @@ import { useAuth } from "../../lib/contexts/authContext/index";
 import { Button } from "../../lib/components/button/button";
 import { Container } from "@/app/lib/components/container/container";
 import PrivateRoute from "@/app/lib/components/private_route";
+import { Card } from "@/app/lib/components/card/card";
+import { motion } from "framer-motion";
+import { AIModel } from "@/app/lib/chat-gpt/models/conversation";
+
+const promptTemplates = [
+  { text: "¿Qué es el etanol?", model: AIModel.CHEMICAL },
+  { text: "¿Quién pintó la Mona Lisa?", model: AIModel.ART }
+];
 
 export default function Page() {
   const auth = useAuth();
@@ -73,9 +81,13 @@ export default function Page() {
       <Container>
         {conversation && (
           <>
-            <div className={styles["chat-container"]}>
+            <div
+              className={`${styles["chat-container"]} ${
+                conversation.speeches.length === 0 ? styles["flow-hidden"] : ""
+              }`}
+            >
               {chatId && (
-                <div className="hidden  top-0 z-50 md:flex justify-end gap-2">
+                <div className={`hidden top-0 z-50 md:flex justify-end gap-2`}>
                   <Button level="primary" fullWidth={false}>
                     Room {chatId}
                   </Button>
@@ -86,6 +98,41 @@ export default function Page() {
                   )}
                 </div>
               )}
+
+              {conversation.speeches.length === 0 && (
+                <div
+                  className={`${styles["secondary-section"]} h-full flex flex-col items-center justify-center`}
+                >
+                  <h2 className={styles["secondary-heading"]}>
+                    <b>¿No sabes qué preguntar?</b>
+                  </h2>
+                  <motion.div
+                    className={styles["prompts-container"]}
+                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    transition={{ duration: 1 }}
+                  >
+                    {promptTemplates
+                      .filter((prompt) => conversation?.model === prompt.model)
+                      .map((prompt, id) => (
+                        <button
+                          key={id}
+                          className="min-w-[100px]"
+                          onClick={() => {
+                            onInputSubmit(prompt.text);
+                          }}
+                        >
+                          <Card direction="row">
+                            <p className={styles["prompt-text"]}>
+                              {prompt.text}
+                            </p>
+                          </Card>
+                        </button>
+                      ))}
+                  </motion.div>
+                </div>
+              )}
+
               <div>
                 {conversation.speeches.map((speech, id) => {
                   const speaker = speech.speaker === "HUMAN" ? "user" : "ai";
@@ -128,6 +175,7 @@ export default function Page() {
                 <div ref={chatEndRef} />
               </div>
             </div>
+
             <ChatInput
               inputSubmitHandler={onInputSubmit}
               submitting={loading}

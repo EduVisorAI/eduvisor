@@ -57,7 +57,7 @@ export const ChemicalAnswer = ({
           <div className="flex justify-start gap-2">
             <Button
               fullWidth={false}
-              level="secondary"
+              level={`${viewMode === "2D" ? "primary" : "secondary"}`}
               clickHandler={() => handleViewModeChange("2D")}
             >
               2D
@@ -65,7 +65,7 @@ export const ChemicalAnswer = ({
 
             <Button
               fullWidth={false}
-              level="secondary"
+              level={`${viewMode === "3D" ? "primary" : "secondary"}`}
               clickHandler={() => handleViewModeChange("3D")}
             >
               3D

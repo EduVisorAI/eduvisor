@@ -21,3 +21,7 @@
 .error-container {
   @apply bg-red-200 text-red-400 p-4 rounded-md max-w-[56rem] mx-auto my-4;
 }
+
+.flow-hidden {
+  @apply overflow-hidden;
+}

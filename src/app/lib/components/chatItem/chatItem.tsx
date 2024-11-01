@@ -3,7 +3,11 @@ import { RenderedConversation } from "../../chat-gpt/renderer";
 import { FaTrash } from "react-icons/fa"; // Importing the delete icon
 
 export const ChatItem: React.FC<
-  React.PropsWithChildren<{ convo: RenderedConversation; isActive: boolean, onDelete: (id: string) => void }>
+  React.PropsWithChildren<{
+    convo: RenderedConversation;
+    isActive: boolean;
+    onDelete: (id: string) => void;
+  }>
 > = (props) => {
   const format = (text: string, length: number) => {
     const shouldBeTruncated = text.length >= length;
@@ -18,19 +22,21 @@ export const ChatItem: React.FC<
     <div
       className={` ${styles["card"]} ${props.isActive ? styles["active"] : ""}`}
     >
-      <div className={`flex gap-2`}>
-        <img
-          src={`/message${props.isActive ? "_active" : ""}.png`}
-          className={`object-contain ${props.isActive ? "#5661F6" : ""} `}
-        />
-        <h4 className={`${styles["title"]} mr-2`}>
-          {format(props.convo.title, 20)}
-        </h4>
+      <div className={`flex justify-between`}>
+        <div className="flex gap-2">
+          <img
+            src={`/message${props.isActive ? "_active" : ""}.png`}
+            className={`object-contain ${props.isActive ? "#5661F6" : ""} `}
+          />
+          <h4 className={`${styles["title"]} mr-2`}>
+            {format(props.convo.title, 20)}
+          </h4>
+        </div>
         <button
           className={styles["delete-button"]}
           onClick={() => {
-						// Update the UI by triggering a state change
-						props.onDelete(props.convo.id);
+            // Update the UI by triggering a state change
+            props.onDelete(props.convo.id);
             // Optionally, you can add additional logic here, such as updating the state or notifying the user
           }}
         >
