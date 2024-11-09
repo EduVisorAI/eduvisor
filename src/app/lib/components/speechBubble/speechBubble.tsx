@@ -6,6 +6,8 @@ import { AIModel } from "../../chat-gpt/models/conversation";
 import { RenderedSpeech } from "../../chat-gpt/renderer";
 import { ChemicalAnswer } from "../knowledgeAreas/chemical/ChemicalAnswer";
 import { ArtAnswer } from "../knowledgeAreas/art/ArtAnswer";
+import { useAuth } from "../../contexts/authContext";
+import Image from "next/image";
 
 export const SpeechBubble: React.FC<{
   chatId?: string;
@@ -32,6 +34,8 @@ export const SpeechBubble: React.FC<{
     delay
   } = props;
 
+  const userInfo = useAuth();
+
   if (speaker === "ai") {
     speechBubbleClass = "ai";
     containerClass = "ai-container";
@@ -49,7 +53,16 @@ export const SpeechBubble: React.FC<{
 
     return (
       <div className="flex gap-2 items-center">
-        <img src="/profile.png" className="block" />
+        <Image
+          src={`${
+            userInfo?.user?.photoURL ||
+            "https://ui-avatars.com/api/?name=" + userInfo?.user?.displayName
+          }`}
+          alt="profile"
+          width={34}
+          height={34}
+          className="rounded-full"
+        />
         <div className={styles[speechBubbleClass]}>{content}</div>
       </div>
     );
