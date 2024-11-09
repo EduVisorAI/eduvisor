@@ -15,6 +15,8 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "../button/button";
 import { RenderedConversation } from "../../chat-gpt/renderer";
+import { useAuth } from "../../contexts/authContext";
+import Image from "next/image";
 
 export const Navigation = () => {
   const [, setChatTitle] = useState("");
@@ -22,6 +24,7 @@ export const Navigation = () => {
     RenderedConversation | undefined
   >();
   const { chatId } = useParams<{ chatId: string }>();
+  const userInfo = useAuth();
   const { conversations, setConversations } = useContext(AIContext);
   const router = useRouter();
 
@@ -99,8 +102,17 @@ export const Navigation = () => {
       <div
         className={`flex items-center rounded-full my-2  justify-start gap-2 border-[#EFEFEF] border-[1px] p-4`}
       >
-        <img src="/profile.png" className="w-[28px] h-[28px]" />
-        <p className="font-bold text-[14px]">Alfredo Barrientos</p>
+        <Image
+          src={`${
+            userInfo?.user?.photoURL ||
+            "https://ui-avatars.com/api/?name=" + userInfo?.user?.displayName
+          }`}
+          alt="profile"
+          width={28}
+          height={28}
+          className="rounded-full"
+        />
+        <p className="font-bold text-[14px]">{userInfo?.user?.displayName}</p>
       </div>
     );
   };
